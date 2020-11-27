@@ -7,6 +7,7 @@ public class SelectWithPaths {
     private int id;
     private String query;
     private ArrayList<String> paths;
+    private ArrayList<Integer> pathsIds;
 
     public SelectWithPaths(int id, String query, ArrayList<String> paths) {
         this.id = id;
@@ -24,5 +25,13 @@ public class SelectWithPaths {
 
     public int getId(){
         return id;
+    }
+
+    public ArrayList<Integer> getPathsIds() {
+        return pathsIds;
+    }
+
+    public void setPathsIds(ArrayList<Integer> pathsIds) {
+        this.pathsIds = pathsIds;
     }
 }

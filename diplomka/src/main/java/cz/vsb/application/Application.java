@@ -8,6 +8,7 @@ import cz.vsb.application.processors.PathGenerator;
 import cz.vsb.application.processors.PathsMap;
 import cz.vsb.application.processors.SimilarityCalculator;
 import cz.vsb.application.selects.SelectComparator;
+import cz.vsb.application.selects.SelectWithPaths;
 import cz.vsb.application.selects.SelectWithSimilarity;
 import java.util.*;
 import java.util.stream.Stream;
@@ -21,7 +22,7 @@ public class Application{
 
         if(Boolean.parseBoolean(PropertyLoader.loadProperty("generatePathsFile")))
             writePathsTofile(queryStmt);
-        calculateSimilarity(grammar, queryStmt);
+     //   calculateSimilarity(grammar, queryStmt);
     }
 
     private static void writePathsTofile(String queryStmt){
@@ -29,16 +30,26 @@ public class Application{
 
         PathsMap pathsMap = new PathsMap();
         Stream<String> lines = InputFileReader.readFile(PropertyLoader.loadProperty("inputXmlFile"));
+        List<SelectWithPaths> resultList = Collections.synchronizedList(new ArrayList<>());
 
         PathFileWriter.startWriting(PropertyLoader.loadProperty("selectsFile"));
         lines.forEach(e ->{
-            PathGenerator.generate(e, pathsMap, queryStmt);
+            ArrayList<SelectWithPaths> threadResult = PathGenerator.generate(e, pathsMap, queryStmt);
+            for(SelectWithPaths select : threadResult)
+                resultList.add(select);
         });
         PathFileWriter.stopWriting();
 
         PathFileWriter.startWriting(PropertyLoader.loadProperty("pathToIdFile"));
         pathsMap.pathsWithNums.forEach((k,v)->{
-            PathFileWriter.write(k + "__" + v + "\n");
+            PathFileWriter.write(k + "__" + v.pathNum + "\n");
+        });
+        PathFileWriter.stopWriting();
+
+        PathFileWriter.startWriting(PropertyLoader.loadProperty("pathIdWithRowIds"));
+        pathsMap.pathsWithNums.forEach((k,v)->{
+            String ids = v.rowIds.toString();
+            PathFileWriter.write(v.pathNum + "_" + ids.substring(1, ids.length()-1).replaceAll("\\s","") + "\n");
         });
         PathFileWriter.stopWriting();
 

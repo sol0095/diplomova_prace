@@ -28,6 +28,7 @@ public class PathGenerator {
             HashSet<String> selectPahts = new HashSet<>();
             strTofile.append(selectWithPaths.getId() + "|sep|" + selectWithPaths.getQuery() + "|sep|");
             Integer num = null;
+            ArrayList<Integer> pathsIds = new ArrayList<>();
 
             for(String s : selectWithPaths.getPaths()){
                 int i = 0;
@@ -37,11 +38,15 @@ public class PathGenerator {
 
                 synchronized (pathsMap){
                     if(pathsMap.pathsWithNums.containsKey(s + "." + i)){
-                        num = pathsMap.pathsWithNums.get(s + "." + i);
-
+                        PathsMapValue pmv = pathsMap.pathsWithNums.get(s + "." + i);
+                        num = pmv.pathNum;
+                        pmv.rowIds.add(selectWithPaths.getId());
                     }
                     else{
-                        pathsMap.pathsWithNums.put(s + "." + i, pathsMap.pathNum);
+                        PathsMapValue pmv = new PathsMapValue();
+                        pmv.pathNum = pathsMap.pathNum;
+                        pmv.rowIds.add(selectWithPaths.getId());
+                        pathsMap.pathsWithNums.put(s + "." + i, pmv);
                         num = pathsMap.pathNum;
                         pathsMap.pathNum++;
                     }
@@ -49,6 +54,8 @@ public class PathGenerator {
 
                 selectPahts.add(s + "." + i);
                 strTofile.append(num + ",");
+                pathsIds.add(num);
+                selectWithPaths.setPathsIds(pathsIds);
             }
             strTofile.append("\n");
         }

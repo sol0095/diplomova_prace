@@ -3,7 +3,7 @@ package cz.vsb.application.processors;
 import java.util.HashMap;
 
 public class PathsMap {
-    public HashMap<String, Integer> pathsWithNums;
+    public HashMap<String, PathsMapValue> pathsWithNums;
     public int pathNum;
 
     public PathsMap(){
