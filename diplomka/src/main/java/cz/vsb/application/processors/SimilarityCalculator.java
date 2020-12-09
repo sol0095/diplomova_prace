@@ -7,18 +7,20 @@ public class SimilarityCalculator{
 
     private String query;
     private int id;
+    private int rowId;
     private HashSet<Integer> inputHash;
     private HashSet<Integer> fileHash = new HashSet<>();
 
     public SimilarityCalculator(String line, HashSet<Integer> inputHash){
         this.inputHash = inputHash;
         String[] splittedLine = line.split("\\|sep\\|");
-        String[] splittedPahts = splittedLine[2].split(",");
+        String[] splittedPahts = splittedLine[3].split(",");
 
         for(int i = 0; i < splittedPahts.length; i++)
             fileHash.add(Integer.parseInt(splittedPahts[i]));
 
-        this.query = splittedLine[1];
+        this.query = splittedLine[2];
+        this.rowId = Integer.parseInt(splittedLine[1]);
         this.id = Integer.parseInt(splittedLine[0]);
     }
 

@@ -20,6 +20,7 @@ C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\TSqlParser
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\MySqlParserBaseListener.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\XmlTreeView.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\SQLiteListener.java
+C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\files\FileToHashMapLoader.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\TSqlLexer.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\files\PropertyLoader.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\selects\SelectWithSimilarity.java
@@ -27,6 +28,7 @@ C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\MySqlParse
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\PlSqlParserBase.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\SimilarityCalculator.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\selects\SelectWithPaths.java
+C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\PathsMapValue.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\PathGenerator.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\TSqlParser.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\selects\SelectComparator.java

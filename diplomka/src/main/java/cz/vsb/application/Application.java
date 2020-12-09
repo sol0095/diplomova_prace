@@ -1,16 +1,15 @@
 package cz.vsb.application;
 
+import cz.vsb.application.files.FileToHashMapLoader;
 import cz.vsb.application.files.InputFileReader;
 import cz.vsb.application.files.PathFileWriter;
 import cz.vsb.application.files.PropertyLoader;
-import cz.vsb.application.processors.InputPreparator;
-import cz.vsb.application.processors.PathGenerator;
-import cz.vsb.application.processors.PathsMap;
-import cz.vsb.application.processors.SimilarityCalculator;
+import cz.vsb.application.processors.*;
 import cz.vsb.application.selects.SelectComparator;
 import cz.vsb.application.selects.SelectWithPaths;
 import cz.vsb.application.selects.SelectWithSimilarity;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Stream;
 
 public class Application{
@@ -20,9 +19,13 @@ public class Application{
         char grammar = PropertyLoader.loadProperty("grammar").charAt(0);
         String queryStmt = getStmtName(grammar);
 
-        if(Boolean.parseBoolean(PropertyLoader.loadProperty("generatePathsFile")))
-            writePathsTofile(queryStmt);
-     //   calculateSimilarity(grammar, queryStmt);
+       /*if(Boolean.parseBoolean(PropertyLoader.loadProperty("generatePathsFile")))
+            writePathsTofile(queryStmt);*/
+        try {
+            calculateSimilarity(grammar, queryStmt);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void writePathsTofile(String queryStmt){
@@ -42,7 +45,7 @@ public class Application{
 
         PathFileWriter.startWriting(PropertyLoader.loadProperty("pathToIdFile"));
         pathsMap.pathsWithNums.forEach((k,v)->{
-            PathFileWriter.write(k + "__" + v.pathNum + "\n");
+            PathFileWriter.write(k + "_" + v.pathNum + "\n");
         });
         PathFileWriter.stopWriting();
 
@@ -57,38 +60,77 @@ public class Application{
         System.out.println("Writing time: " + (finish-start) + "ms");
     }
 
-    private static void calculateSimilarity(char grammar, String quieryStmt){
+    private static void calculateSimilarity(char grammar, String quieryStmt) throws InterruptedException {
+
         long start = System.currentTimeMillis();
         InputPreparator.prepareInput(PropertyLoader.loadProperty("inputQuery"), grammar, quieryStmt);
         long finish = System.currentTimeMillis();
         System.out.println("Prepare time: " + (finish-start) + "ms");
 
-        List<SelectWithSimilarity> resultList = Collections.synchronizedList(new ArrayList<>());
-
         start = System.currentTimeMillis();
-        Stream<String> lines = InputFileReader.readFile(PropertyLoader.loadProperty("selectsFile"));
+        FileToHashMapLoader pathsLoader = new FileToHashMapLoader(InputFileReader.readFile(PropertyLoader.loadProperty("pathIdWithRowIds")));
+        FileToHashMapLoader selectsLoader = new FileToHashMapLoader(InputFileReader.readFile(PropertyLoader.loadProperty("selectsFile")));
+        pathsLoader.start();
+        selectsLoader.start();
+        pathsLoader.join();
+        selectsLoader.join();
+        Map<Integer,String> paths = pathsLoader.getMap();
+        Map<Integer,String> selects = selectsLoader.getMap();
         finish = System.currentTimeMillis();
-        System.out.println("Reading file time: " + (finish-start) + "ms");
+        System.out.println("Files loading time: " + (finish-start) + "ms");
+
 
         start = System.currentTimeMillis();
-        lines.forEach(e ->{
-            SelectWithSimilarity selectWithSimilarity = new SimilarityCalculator(e, InputPreparator.getInputPaths()).calculate();
-            resultList.add(selectWithSimilarity);
-        });
+        HashSet<Integer> selectIds = new HashSet<>();
+        HashSet<Integer> pathIds = InputPreparator.getInputPaths();
+        for(Integer i : pathIds){
+            if(paths.containsKey(i)){
+                String[] idsStr = paths.get(i).split(",");
+                for(String s : idsStr)
+                    selectIds.add(Integer.parseInt(s));
+            }
+        }
+        finish = System.currentTimeMillis();
+        System.out.println("Getting selects time: " + (finish-start) + "ms");
+
+        start = System.currentTimeMillis();
+        ArrayList<SelectWithSimilarity> results = new ArrayList<>();
+        for(Integer i : selectIds){
+            HashSet<Integer> fileHash = new HashSet<>();
+            String select = selects.get(i);
+            int split = select.indexOf('_');
+            int rowId = Integer.parseInt(select.substring(0, split));
+            select = select.substring(split+1);
+            split = select.indexOf('_');
+            String[] splittedPahts = select.substring(0, split).split(",");
+
+            for(int j = 0; j < splittedPahts.length; j++)
+                fileHash.add(Integer.parseInt(splittedPahts[j]));
+
+            String query = select.substring(split+1);
+
+            int intersection = 0;
+
+            for(Integer s : pathIds){
+                if(fileHash.contains(s))
+                    intersection++;
+            }
+            double totalSize = pathIds.size() + fileHash.size() - intersection;
+            results.add(new SelectWithSimilarity(query, (double)intersection / totalSize));
+        }
         finish = System.currentTimeMillis();
         System.out.println("Computing time: " + (finish-start) + "ms");
 
-
         start = System.currentTimeMillis();
-        Collections.sort(resultList, new SelectComparator());
-
+        Collections.sort(results, new SelectComparator());
         finish = System.currentTimeMillis();
         System.out.println("Sorting time: " + (finish-start) + "ms");
 
         for(int i = 0; i < 20; i++){
-            System.out.println(resultList.get(i).getQuery());
-            System.out.println(resultList.get(i).getSimilarity());
+            System.out.println(results.get(i).getQuery());
+            System.out.println(results.get(i).getSimilarity());
         }
+
     }
 
     private static String getStmtName(char grammar){

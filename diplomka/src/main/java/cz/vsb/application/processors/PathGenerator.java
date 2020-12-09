@@ -20,15 +20,15 @@ public class PathGenerator {
 
     private static int mainTagLength = "</sqlSelects>".length();
     public static DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    private static Integer uniqueID = 0;
 
     private static void writeToFile(ArrayList<SelectWithPaths> selectsWithPaths, PathsMap pathsMap) {
         StringBuilder strTofile = new StringBuilder();
 
         for(SelectWithPaths selectWithPaths : selectsWithPaths){
             HashSet<String> selectPahts = new HashSet<>();
-            strTofile.append(selectWithPaths.getId() + "|sep|" + selectWithPaths.getQuery() + "|sep|");
+            strTofile.append(selectWithPaths.getId() + "_" + selectWithPaths.getRowId() + "_");
             Integer num = null;
-            ArrayList<Integer> pathsIds = new ArrayList<>();
 
             for(String s : selectWithPaths.getPaths()){
                 int i = 0;
@@ -54,16 +54,14 @@ public class PathGenerator {
 
                 selectPahts.add(s + "." + i);
                 strTofile.append(num + ",");
-                pathsIds.add(num);
-                selectWithPaths.setPathsIds(pathsIds);
             }
-            strTofile.append("\n");
+            strTofile.append( "_" + selectWithPaths.getQuery()+ "\n");
         }
 
         PathFileWriter.write( strTofile.toString());
     }
 
-    public static ArrayList<SelectWithPaths> generate(String line, PathsMap pathsMap, String queryStmt){
+    public static synchronized ArrayList<SelectWithPaths> generate(String line, PathsMap pathsMap, String queryStmt){
         ArrayList<SelectWithPaths> selectsWithPaths = new ArrayList<>();
 
         if(line.length() > mainTagLength){
@@ -72,14 +70,14 @@ public class PathGenerator {
                 Document document = dBuilder.parse(new InputSource(new StringReader(line)));
                 NodeList nodeList = document.getElementsByTagName(queryStmt);
                 String selectCode = document.getElementsByTagName("selectCode").item(0).getFirstChild().getNodeValue();
-                int id = Integer.parseInt(document.getElementsByTagName("rowId").item(0).getFirstChild().getNodeValue());
+                int rowId = Integer.parseInt(document.getElementsByTagName("rowId").item(0).getFirstChild().getNodeValue());
 
-                for(int i = 0; i < nodeList.getLength(); i++){
+                for (int i = 0; i < nodeList.getLength(); i++) {
                     ArrayList<String> pathsInTree = new ArrayList<>();
-                    XmlTreeView.getLeafPaths((Element)nodeList.item(i), new StringBuilder(), pathsInTree);
-                    selectsWithPaths.add(new SelectWithPaths(id, selectCode, pathsInTree));
-                }
+                    XmlTreeView.getLeafPaths((Element) nodeList.item(i), new StringBuilder(), pathsInTree);
 
+                    selectsWithPaths.add(new SelectWithPaths(uniqueID++, rowId, selectCode, pathsInTree));
+                }
                 writeToFile(selectsWithPaths, pathsMap);
 
             } catch (ParserConfigurationException e) {

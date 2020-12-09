@@ -15,8 +15,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -95,13 +94,14 @@ public class InputPreparator {
     }
 
     private static void getPathsIDs(HashSet<String> inputHashStr){
+
         Stream<String> lines = InputFileReader.readFile(PropertyLoader.loadProperty("pathToIdFile"));
 
         lines.forEach(s ->{
-            String[] splittedLine = s.split("__");
-            if(inputHashStr.contains(splittedLine[0])) {
+            int split = s.indexOf('_');
+            if(inputHashStr.contains(s.substring(0, split))) {
                 synchronized (inputHash) {
-                    inputHash.add(Integer.parseInt(splittedLine[1]));
+                    inputHash.add(Integer.parseInt(s.substring(split+1)));
                 }
             }
         });

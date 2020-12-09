@@ -139,6 +139,7 @@ cz\vsb\grammars\MySqlParser$SelectStatementContext.class
 cz\vsb\grammars\MySqlParser$HelpStatementContext.class
 cz\vsb\grammars\MySqlParser$CheckTableConstraintContext.class
 cz\vsb\grammars\PlSqlParser$Commit_statementContext.class
+cz\vsb\application\processors\PathsMapValue.class
 cz\vsb\grammars\PlSqlParser$Alter_sequenceContext.class
 cz\vsb\grammars\MySqlParser$CheckTableOptionContext.class
 cz\vsb\grammars\MySqlParser$StartSlaveContext.class
@@ -398,6 +399,7 @@ cz\vsb\grammars\PlSqlParser$Cost_matrix_clauseContext.class
 cz\vsb\grammars\PlSqlParser$Modify_collection_retrievalContext.class
 cz\vsb\grammars\TSqlParser$Alter_partition_functionContext.class
 cz\vsb\grammars\PlSqlParser$Profile_nameContext.class
+cz\vsb\application\files\FileToHashMapLoader.class
 cz\vsb\grammars\PlSqlParser$Procedure_callContext.class
 cz\vsb\grammars\TSqlParser$Create_statisticsContext.class
 cz\vsb\grammars\MySqlParser$PartitionOptionNodeGroupContext.class

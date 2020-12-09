@@ -8,6 +8,6 @@ public class PathsMap {
 
     public PathsMap(){
         this.pathsWithNums = new HashMap<>();
-        this.pathNum = 1;
+        this.pathNum = 0;
     }
 }
