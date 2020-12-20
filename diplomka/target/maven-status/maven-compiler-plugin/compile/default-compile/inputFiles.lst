@@ -3,13 +3,16 @@ C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\SQLitePars
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\PlSqlLexer.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\files\InputFileReader.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\SQLiteBaseListener.java
+C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\PathsSizeThread.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\PlSqlLexerBase.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\TSqlParserBaseListener.java
+C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\Cursor.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\InputPreparator.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\Main.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\PathsMap.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\MySqlParserListener.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\PlSqlParser.java
+C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\InputThread.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\PlSqlParserBaseListener.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\Application.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\ResultPreparator.java
@@ -23,6 +26,7 @@ C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\SQLiteList
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\files\FileToHashMapLoader.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\TSqlLexer.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\files\PropertyLoader.java
+C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\processors\SelectsFileThread.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\application\selects\SelectWithSimilarity.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\MySqlParser.java
 C:\Users\DOMA\Desktop\skola\diplomka\DP\src\main\java\cz\vsb\grammars\PlSqlParserBase.java

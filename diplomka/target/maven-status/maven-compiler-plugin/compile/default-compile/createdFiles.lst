@@ -18,6 +18,7 @@ cz\vsb\grammars\PlSqlParser$Mapping_table_clauseContext.class
 cz\vsb\grammars\TSqlParser$Alter_tableContext.class
 cz\vsb\grammars\PlSqlParser$General_recoveryContext.class
 cz\vsb\grammars\MySqlParser$SetPasswordContext.class
+cz\vsb\application\processors\InputThread.class
 cz\vsb\grammars\PlSqlParser$Model_column_clausesContext.class
 cz\vsb\grammars\PlSqlParser$Xmltype_virtual_columnsContext.class
 cz\vsb\grammars\MySqlParser$CreateProcedureContext.class
@@ -616,6 +617,7 @@ cz\vsb\grammars\MySqlParser$InnerJoinContext.class
 cz\vsb\grammars\PlSqlParser$Between_boundContext.class
 cz\vsb\grammars\PlSqlParser$Map_order_function_specContext.class
 cz\vsb\grammars\PlSqlParser$ParameterContext.class
+cz\vsb\application\processors\Cursor.class
 cz\vsb\grammars\TSqlParser$Create_ruleContext.class
 cz\vsb\grammars\MySqlParser$GtidsUntilOptionContext.class
 cz\vsb\grammars\PlSqlParser$For_update_of_partContext.class
@@ -659,6 +661,7 @@ cz\vsb\grammars\PlSqlParser$Partition_extention_clauseContext.class
 cz\vsb\grammars\PlSqlParser$Audit_traditionalContext.class
 cz\vsb\grammars\PlSqlParser$ConcatenationContext.class
 cz\vsb\grammars\TSqlParser$Goto_statementContext.class
+cz\vsb\application\processors\PathsSizeThread.class
 cz\vsb\grammars\MySqlParser$CollateExpressionAtomContext.class
 cz\vsb\grammars\MySqlParser$InstallPluginContext.class
 cz\vsb\grammars\PlSqlParser$Hash_partition_quantityContext.class
@@ -1064,6 +1067,7 @@ cz\vsb\grammars\MySqlParser$CacheIndexStatementContext.class
 cz\vsb\grammars\PlSqlParser$Varray_itemContext.class
 cz\vsb\grammars\PlSqlParser$Cell_reference_optionsContext.class
 cz\vsb\grammars\TSqlParser$Output_column_nameContext.class
+cz\vsb\application\processors\SelectsFileThread.class
 cz\vsb\grammars\MySqlParser$SqlStatementContext.class
 cz\vsb\grammars\MySqlParser$PartitionDefinerVectorContext.class
 cz\vsb\grammars\SQLiteParser$Join_operatorContext.class

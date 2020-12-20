@@ -6,10 +6,11 @@ import cz.vsb.application.files.PathFileWriter;
 import cz.vsb.application.files.PropertyLoader;
 import cz.vsb.application.processors.*;
 import cz.vsb.application.selects.SelectComparator;
-import cz.vsb.application.selects.SelectWithPaths;
 import cz.vsb.application.selects.SelectWithSimilarity;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
 import java.util.stream.Stream;
 
 public class Application{
@@ -19,11 +20,15 @@ public class Application{
         char grammar = PropertyLoader.loadProperty("grammar").charAt(0);
         String queryStmt = getStmtName(grammar);
 
-       /*if(Boolean.parseBoolean(PropertyLoader.loadProperty("generatePathsFile")))
-            writePathsTofile(queryStmt);*/
+        if(Boolean.parseBoolean(PropertyLoader.loadProperty("generatePathsFile")))
+            writePathsTofile(queryStmt);
         try {
             calculateSimilarity(grammar, queryStmt);
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -33,13 +38,10 @@ public class Application{
 
         PathsMap pathsMap = new PathsMap();
         Stream<String> lines = InputFileReader.readFile(PropertyLoader.loadProperty("inputXmlFile"));
-        List<SelectWithPaths> resultList = Collections.synchronizedList(new ArrayList<>());
 
         PathFileWriter.startWriting(PropertyLoader.loadProperty("selectsFile"));
         lines.forEach(e ->{
-            ArrayList<SelectWithPaths> threadResult = PathGenerator.generate(e, pathsMap, queryStmt);
-            for(SelectWithPaths select : threadResult)
-                resultList.add(select);
+            PathGenerator.generate(e, pathsMap, queryStmt);
         });
         PathFileWriter.stopWriting();
 
@@ -49,88 +51,127 @@ public class Application{
         });
         PathFileWriter.stopWriting();
 
+        HashMap<Integer, Integer> pathsSize = new HashMap<>();
+
         PathFileWriter.startWriting(PropertyLoader.loadProperty("pathIdWithRowIds"));
         pathsMap.pathsWithNums.forEach((k,v)->{
-            String ids = v.rowIds.toString();
+            List<Integer> list = new ArrayList<Integer>(v.rowIds);
+            Collections.sort(list);
+            String ids = list.toString();
+
+            for(Integer i : list){
+                synchronized (pathsSize){
+                    if(pathsSize.containsKey(i)){
+                        int count = pathsSize.get(i);
+                        count++;
+                        pathsSize.replace(i, count);
+                    }
+                    else{
+                        pathsSize.put(i, 1);
+                    }
+                }
+            }
             PathFileWriter.write(v.pathNum + "_" + ids.substring(1, ids.length()-1).replaceAll("\\s","") + "\n");
         });
+        PathFileWriter.stopWriting();
+
+        PathFileWriter.startWriting(PropertyLoader.loadProperty("pathsSize"));
+        String str = pathsSize.toString();
+        PathFileWriter.write(str.substring(1, str.length()-1).replaceAll("\\s",""));
         PathFileWriter.stopWriting();
 
         long finish = System.currentTimeMillis();
         System.out.println("Writing time: " + (finish-start) + "ms");
     }
 
-    private static void calculateSimilarity(char grammar, String quieryStmt) throws InterruptedException {
+    private static void calculateSimilarity(char grammar, String queryStmt) throws InterruptedException, IOException {
 
         long start = System.currentTimeMillis();
-        InputPreparator.prepareInput(PropertyLoader.loadProperty("inputQuery"), grammar, quieryStmt);
-        long finish = System.currentTimeMillis();
-        System.out.println("Prepare time: " + (finish-start) + "ms");
 
-        start = System.currentTimeMillis();
+        InputThread inputThread = new InputThread(grammar, queryStmt);
+        inputThread.start();
+
+        SelectsFileThread selectsFileThread = new SelectsFileThread();
+        selectsFileThread.start();
+
         FileToHashMapLoader pathsLoader = new FileToHashMapLoader(InputFileReader.readFile(PropertyLoader.loadProperty("pathIdWithRowIds")));
-        FileToHashMapLoader selectsLoader = new FileToHashMapLoader(InputFileReader.readFile(PropertyLoader.loadProperty("selectsFile")));
         pathsLoader.start();
-        selectsLoader.start();
-        pathsLoader.join();
-        selectsLoader.join();
-        Map<Integer,String> paths = pathsLoader.getMap();
-        Map<Integer,String> selects = selectsLoader.getMap();
-        finish = System.currentTimeMillis();
-        System.out.println("Files loading time: " + (finish-start) + "ms");
 
+        PathsSizeThread pathsSizeThread = new PathsSizeThread();
+        pathsSizeThread.start();
+
+        inputThread.join();
+        pathsLoader.join();
+        Map<Integer,String> paths = pathsLoader.getMap();
+
+        long finish = System.currentTimeMillis();
+        System.out.println("Preparing input and loading file time: " + (finish-start) + "ms");
 
         start = System.currentTimeMillis();
-        HashSet<Integer> selectIds = new HashSet<>();
+        ArrayList<Cursor> cursors = new ArrayList<>();
+
         HashSet<Integer> pathIds = InputPreparator.getInputPaths();
         for(Integer i : pathIds){
             if(paths.containsKey(i)){
                 String[] idsStr = paths.get(i).split(",");
-                for(String s : idsStr)
-                    selectIds.add(Integer.parseInt(s));
+                cursors.add(new Cursor(Arrays.stream(idsStr).mapToInt(Integer::parseInt).toArray(), i));
             }
         }
+        int cursorsCount = cursors.size();
+
         finish = System.currentTimeMillis();
-        System.out.println("Getting selects time: " + (finish-start) + "ms");
+        System.out.println("Get cursors time: " + (finish-start) + "ms");
 
         start = System.currentTimeMillis();
-        ArrayList<SelectWithSimilarity> results = new ArrayList<>();
-        for(Integer i : selectIds){
-            HashSet<Integer> fileHash = new HashSet<>();
-            String select = selects.get(i);
-            int split = select.indexOf('_');
-            int rowId = Integer.parseInt(select.substring(0, split));
-            select = select.substring(split+1);
-            split = select.indexOf('_');
-            String[] splittedPahts = select.substring(0, split).split(",");
 
-            for(int j = 0; j < splittedPahts.length; j++)
-                fileHash.add(Integer.parseInt(splittedPahts[j]));
+        HashMap<Integer, Integer> intersection = new HashMap<>();
+        HashMap<Integer, Integer> nonIntersection = new HashMap<>();
+        while(cursors.size() > 0){
+            int min = cursors.get(0).getCurrent();
+            int count = 0;
 
-            String query = select.substring(split+1);
-
-            int intersection = 0;
-
-            for(Integer s : pathIds){
-                if(fileHash.contains(s))
-                    intersection++;
+            for(Cursor c : cursors){
+                if(c.getCurrent() < min)
+                    min = c.getCurrent();
             }
-            double totalSize = pathIds.size() + fileHash.size() - intersection;
-            results.add(new SelectWithSimilarity(query, (double)intersection / totalSize));
+
+            for(int i = 0; i < cursors.size(); i++){
+                if(cursors.get(i).getCurrent() == min){
+                    cursors.get(i).moveNext();
+                    count++;
+                }
+
+                if(!cursors.get(i).isInRange()){
+                    cursors.remove(i);
+                    i--;
+                }
+            }
+
+            intersection.put(min, count);
+            nonIntersection.put(min, cursorsCount-count);
         }
+
         finish = System.currentTimeMillis();
         System.out.println("Computing time: " + (finish-start) + "ms");
 
+        ArrayList<SelectWithSimilarity> resultList = new ArrayList<>();
+        selectsFileThread.join();
+        pathsSizeThread.join();
+
+        intersection.forEach((k,v)->{
+            double similarity = (double)v/(double)(pathsSizeThread.getPathsSize().get(k)+nonIntersection.get(k));
+            resultList.add(new SelectWithSimilarity(selectsFileThread.getQueries().get(k), similarity));
+        });
+
         start = System.currentTimeMillis();
-        Collections.sort(results, new SelectComparator());
+        Collections.sort(resultList, new SelectComparator());
         finish = System.currentTimeMillis();
         System.out.println("Sorting time: " + (finish-start) + "ms");
 
         for(int i = 0; i < 20; i++){
-            System.out.println(results.get(i).getQuery());
-            System.out.println(results.get(i).getSimilarity());
+            System.out.println(resultList.get(i).getQuery());
+            System.out.println(resultList.get(i).getSimilarity());
         }
-
     }
 
     private static String getStmtName(char grammar){

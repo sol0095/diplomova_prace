@@ -5,6 +5,7 @@ V souboru file.properties lze nalézt tyto konfigurace:
 	selectsFile - nastavení cesty k souboru s SQL dotazy (+ jejich rowID) a obsaženými cestami z derivačních stromů SQL (od kořene k listu). Pokud soubor neexistuje, tak se vygeneruje.
 	pathToIdFile - nastavení cesty k souboru "cesta-ID cesty" z derivačních stromů SQL (od kořene k listu). Pokud soubor neexistuje, tak se vygeneruje.
 	pathIdWithRowIds - nastavení cesty k souboru "ID cesty-rowID" všech dotazů, které obsahují danou cestu. Pokud soubor neexistuje, tak se vygeneruje.
+	pathsSize - nastavení cesty k souboru, který obsahuje kolikrát je daný dotaz obsažen v cestách.
 	generatePathsFile - pokud ještě neexistují soubory selectsFile.txt, pathToIdFile.txt a pathIdWithRowIds.txt, tak nastavit na hodnotu true, jinak false.
 	grammar - číslo, které udává, na jakou gramatiku se nástroj spustí. Nyní je to 0 pro MySQL a 1 pro SQLite.
 	inputQuery - vstupní dotaz, ke kterému se mají vypsat podobné dotazy.
@@ -21,6 +22,7 @@ Příklad použití:
 	selectsFile=data/selectsFile.txt
 	pathToIdFile=data/pathToIdFile.txt
 	pathIdWithRowIds=data/pathIdWithRowIds.txt
+	pathsSize=data/pathsSize.txt
 	generatePathsFile=true
 	grammar=0
 	inputQuery=SELECT * FROM products WHERE (price BETWEEN 1.0 AND 2.0) AND (quantity BETWEEN 1000 AND 2000)
