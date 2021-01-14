@@ -105,12 +105,13 @@ public class Application{
         Map<Integer,String> paths = pathsLoader.getMap();
 
         long finish = System.currentTimeMillis();
-        System.out.println("Preparing input and loading file time: " + (finish-start) + "ms");
+        System.out.println("Loading files and total prepare time: " + (finish-start) + "ms");
 
         start = System.currentTimeMillis();
         ArrayList<Cursor> cursors = new ArrayList<>();
 
         HashSet<Integer> pathIds = InputPreparator.getInputPaths();
+        int size = pathIds.size();
         for(Integer i : pathIds){
             if(paths.containsKey(i)){
                 String[] idsStr = paths.get(i).split(",");
@@ -167,6 +168,8 @@ public class Application{
         Collections.sort(resultList, new SelectComparator());
         finish = System.currentTimeMillis();
         System.out.println("Sorting time: " + (finish-start) + "ms");
+
+        System.out.println("Total queries compared: " + resultList.size());
 
         for(int i = 0; i < 20; i++){
             System.out.println(resultList.get(i).getQuery());

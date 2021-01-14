@@ -29,6 +29,7 @@ public class InputPreparator {
     private static HashSet<Integer> inputHash = new HashSet<>();
 
     public static void prepareInput(String query, char grammar, String queryStmt){
+        long start= System.currentTimeMillis();
         ParseTree parseTree = null;
         Parser parser = null;
         query = query.toUpperCase();
@@ -55,8 +56,15 @@ public class InputPreparator {
         }
 
         if(parseTree != null && parser.getNumberOfSyntaxErrors() == 0){
+            long finish= System.currentTimeMillis();
+            System.out.println("Grammar time: " + (finish-start) + "ms");
+            start = System.currentTimeMillis();
+
             ResultPreparator resultPreparator = new ResultPreparator();
             resultPreparator.prepareData(query, parseTree, parser);
+            finish = System.currentTimeMillis();
+            System.out.println("Converting tree to string xml time: " + (finish-start) + "ms");
+
             prepareInputPaths(resultPreparator.getXmlData(), queryStmt);
         }
     }
@@ -67,11 +75,17 @@ public class InputPreparator {
     }
 
     private static void prepareInputPaths(String xmlTree, String queryStmt){
+        long start = System.currentTimeMillis();
+        long start2 = System.currentTimeMillis();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         try {
             ArrayList<String> inputPaths = new ArrayList<>();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document document = dBuilder.parse(new InputSource(new StringReader(xmlTree)));
+            long finish2 = System.currentTimeMillis();
+            long convertTime = finish2 - start2;
+
+
             XmlTreeView.getLeafPaths((Element)(document.getElementsByTagName(queryStmt).item(0)), new StringBuilder(), inputPaths);
             HashSet<String> inputHashStr = new HashSet<>();
 
@@ -83,7 +97,11 @@ public class InputPreparator {
                 inputHashStr.add(s+ "." + i);
             }
 
-            getPathsIDs(inputHashStr);
+            long creatingMapTime = getPathsIDs(inputHashStr);
+            long finish = System.currentTimeMillis();
+
+            System.out.println("Converting string to xml: " + convertTime + "ms");
+            System.out.println("Getting paths from input query: " + (finish-start-creatingMapTime-convertTime) + "ms");
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -93,18 +111,40 @@ public class InputPreparator {
         }
     }
 
-    private static void getPathsIDs(HashSet<String> inputHashStr){
+    private static long getPathsIDs(HashSet<String> inputHashStr){
 
+        long start = System.currentTimeMillis();
         Stream<String> lines = InputFileReader.readFile(PropertyLoader.loadProperty("pathToIdFile"));
+        HashMap<String, Integer> mappingHash = new HashMap<>();
 
-        lines.forEach(s ->{
+        lines.forEach(l->{
+            int firstSplit = l.indexOf('_');
+            synchronized (mappingHash){
+                mappingHash.put(l.substring(0, firstSplit), Integer.parseInt(l.substring(firstSplit+1)));
+            }
+        });
+        long finish = System.currentTimeMillis();
+        long creatingMapTime = finish - start;
+        System.out.println("Converting file to hashmap: " + creatingMapTime + "ms");
+
+
+        for(String s : inputHashStr){
+            inputHash.add(mappingHash.get(s));
+        }
+
+        return creatingMapTime;
+
+        /*lines.forEach(s ->{
             int split = s.indexOf('_');
             if(inputHashStr.contains(s.substring(0, split))) {
                 synchronized (inputHash) {
                     inputHash.add(Integer.parseInt(s.substring(split+1)));
                 }
             }
-        });
+        });*/
+
+
+
     }
 
     public static HashSet<Integer> getInputPaths(){
