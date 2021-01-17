@@ -1,28 +1,26 @@
 Nápověda pro nástroj
 ##############################################################
 V souboru file.properties lze nalézt tyto konfigurace:
-	inputXmlFile - nastavení cesty k souboru s derivačními stromy z SQL (výstup z upraveného semestrálního projektu, kde je jeden dotaz na jednom řádku).
-	selectsFile - nastavení cesty k souboru s SQL dotazy (+ jejich rowID) a obsaženými cestami z derivačních stromů SQL (od kořene k listu). Pokud soubor neexistuje, tak se vygeneruje.
-	pathToIdFile - nastavení cesty k souboru "cesta-ID cesty" z derivačních stromů SQL (od kořene k listu). Pokud soubor neexistuje, tak se vygeneruje.
-	pathIdWithRowIds - nastavení cesty k souboru "ID cesty-rowID" všech dotazů, které obsahují danou cestu. Pokud soubor neexistuje, tak se vygeneruje.
-	pathsSize - nastavení cesty k souboru, který obsahuje kolikrát je daný dotaz obsažen v cestách.
-	generatePathsFile - pokud ještě neexistují soubory selectsFile.txt, pathToIdFile.txt a pathIdWithRowIds.txt, tak nastavit na hodnotu true, jinak false.
-	grammar - číslo, které udává, na jakou gramatiku se nástroj spustí. Nyní je to 0 pro MySQL a 1 pro SQLite.
-	inputQuery - vstupní dotaz, ke kterému se mají vypsat podobné dotazy.
+	mysqlSelectsFile=cesta/data/MySQL/MySqlSelects.txt
+	mysqlPathToIdFile=cesta/data/MySQL/MySqlPathToId.txt
+	mysqlPathIdWithRowIdsFile=cesta/data/MySQL/MySqlPathIdWithRowIds.txt
+	mysqlPathsSizeFile=cesta/data/MySQL/MySqlPathsSize.txt
+
+	sqliteSelectsFile=cesta/data/SQLite/SQLiteSelects.txt
+	sqlitePathToIdFile=cesta/data/SQLite/SQLitePathToId.txt
+	sqlitePathIdWithRowIdsFile=cesta/data/SQLite/SQLitePathIdWithRowIds.txt
+	sqlitePathsSizeFile=cesta/data/SQLite/SQLitePathsSize.txt
+
+	tsqlSelectsFile=cesta/data/TSQL/TSqlSelects.txt
+	tsqlPathToIdFile=cesta/data/TSQL/TSqlPathToId.txt
+	tsqlPathIdWithRowIdsFile=cesta/data/TSQL/TSqlPathIdWithRowIds.txt
+	tsqlPathsSizeFile=cesta/data/TSQL/TSqlPathsSize.txt
+
+	plsqlSelectsFile=cesta/data/PLSQL/PlSqlSelects.txt
+	plsqlPathToIdFile=cesta/data/PLSQL/PlSqlPathToId.txt
+	plsqlPathIdWithRowIdsFile=cesta/data/PLSQL/PlSqlPathIdWithRowIds.txt
+	plsqlPathsSizeFile=cesta/PLSQL/PlSqlPathsSize.txt
 
 ##############################################################
-Spuštení s generováním souborů trvá déle. Teprve až jak jsou soubory vygenerované, tak samotný výpočet podobnosti je rychlý.
-Pro správné fungování je nutné všechny uvedené konfigurace nastavit.
+Pro správné fungování je nutné všechny uvedené konfigurace (cesty) nastavit.
 Pozor na lomítka v absolutních cestách. Pokud se zadá absolutní cesta s opačným lomítkem, vyvolá se výjimka.
-
-##############################################################
-##############################################################
-Příklad použití:
-	inputXmlFile=data/MySQL.xml
-	selectsFile=data/selectsFile.txt
-	pathToIdFile=data/pathToIdFile.txt
-	pathIdWithRowIds=data/pathIdWithRowIds.txt
-	pathsSize=data/pathsSize.txt
-	generatePathsFile=true
-	grammar=0
-	inputQuery=SELECT * FROM products WHERE (price BETWEEN 1.0 AND 2.0) AND (quantity BETWEEN 1000 AND 2000)

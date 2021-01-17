@@ -6,12 +6,17 @@ public class InputThread extends Thread{
 
     private char grammar;
     private String queryStmt;
-    public InputThread(char grammar, String queryStmt){
+    private String query;
+    private InputPreparator inputPreparator;
+
+    public InputThread(char grammar, String queryStmt, String query, InputPreparator inputPreparator){
         this.grammar = grammar;
         this.queryStmt = queryStmt;
+        this.query = query;
+        this.inputPreparator = inputPreparator;
     }
     @Override
     public void run() {
-        InputPreparator.prepareInput(PropertyLoader.loadProperty("inputQuery"), grammar, queryStmt);
+        inputPreparator.prepareInput(query, grammar, queryStmt);
     }
 }

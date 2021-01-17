@@ -4,10 +4,12 @@ public class SelectWithSimilarity {
 
     private String query;
     private double similarity;
+    private int rowId;
 
-    public SelectWithSimilarity(String query, double similarity) {
+    public SelectWithSimilarity(String query, double similarity, int rowId) {
         this.similarity = similarity;
         this.query = query;
+        this.rowId = rowId;
     }
 
     public String getQuery() {
@@ -16,5 +18,9 @@ public class SelectWithSimilarity {
 
     public double getSimilarity() {
         return similarity;
+    }
+
+    public int getRowId() {
+        return rowId;
     }
 }

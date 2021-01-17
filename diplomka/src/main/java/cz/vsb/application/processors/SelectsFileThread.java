@@ -2,19 +2,20 @@ package cz.vsb.application.processors;
 
 import cz.vsb.application.files.InputFileReader;
 import cz.vsb.application.files.PropertyLoader;
+import cz.vsb.application.selects.Select;
 
 import java.util.HashMap;
 import java.util.stream.Stream;
 
 public class SelectsFileThread extends Thread{
 
-    private HashMap<Integer, String> queries;
+    private HashMap<Integer, Select> queries;
 
     public SelectsFileThread(){
         queries = new HashMap<>();
     }
 
-    public HashMap<Integer, String> getQueries(){
+    public HashMap<Integer, Select> getQueries(){
         return queries;
     }
 
@@ -28,8 +29,10 @@ public class SelectsFileThread extends Thread{
             String sub = l.substring(split+1);
             split = sub.indexOf('_');
 
+            Select select = new Select(Integer.valueOf(sub.substring(0, split)), sub.substring(split+1));
+
             synchronized (queries){
-                queries.put(id, sub.substring(split+1));
+                queries.put(id, select);
             }
         });
     }

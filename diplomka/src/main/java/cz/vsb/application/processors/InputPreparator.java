@@ -1,7 +1,8 @@
 package cz.vsb.application.processors;
 
-import cz.vsb.application.files.InputFileReader;
-import cz.vsb.application.files.PropertyLoader;
+import cz.vsb.application.GrammarState;
+import cz.vsb.application.files.FilesLoader;
+import cz.vsb.application.files.GrammarFiles;
 import cz.vsb.grammars.*;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ConsoleErrorListener;
@@ -17,22 +18,28 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
 import static org.antlr.v4.runtime.CharStreams.fromString;
 
 public class InputPreparator {
 
-    private static HashSet<Integer> inputHash = new HashSet<>();
+    private HashSet<Integer> inputHash = new HashSet<>();
+    private GrammarFiles grammarFiles;
 
-    public static void prepareInput(String query, char grammar, String queryStmt){
+    public GrammarState prepareInput(String query, char grammar, String queryStmt){
         long start= System.currentTimeMillis();
+        if(query == null)
+            return GrammarState.WRONG;
+        else if(query.length() == 0)
+            return GrammarState.EMPTY;
+
         ParseTree parseTree = null;
         Parser parser = null;
         query = query.toUpperCase();
+
+        if(!query.matches(".*[A-Z].*"))
+            return GrammarState.EMPTY;
 
         if(grammar == '0'){
             MySqlLexer lexer = new MySqlLexer(fromString(query));
@@ -58,23 +65,26 @@ public class InputPreparator {
         if(parseTree != null && parser.getNumberOfSyntaxErrors() == 0){
             long finish= System.currentTimeMillis();
             System.out.println("Grammar time: " + (finish-start) + "ms");
-            start = System.currentTimeMillis();
 
+            start = System.currentTimeMillis();
             ResultPreparator resultPreparator = new ResultPreparator();
             resultPreparator.prepareData(query, parseTree, parser);
             finish = System.currentTimeMillis();
             System.out.println("Converting tree to string xml time: " + (finish-start) + "ms");
 
+            grammarFiles = FilesLoader.getGrammar(grammar);
             prepareInputPaths(resultPreparator.getXmlData(), queryStmt);
+            return GrammarState.CORRECT;
         }
+        return GrammarState.WRONG;
     }
 
-    private static void removeErrorListeners(Lexer lexer, Parser parser){
+    private void removeErrorListeners(Lexer lexer, Parser parser){
         lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
         parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
     }
 
-    private static void prepareInputPaths(String xmlTree, String queryStmt){
+    private void prepareInputPaths(String xmlTree, String queryStmt){
         long start = System.currentTimeMillis();
         long start2 = System.currentTimeMillis();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -97,11 +107,11 @@ public class InputPreparator {
                 inputHashStr.add(s+ "." + i);
             }
 
-            long creatingMapTime = getPathsIDs(inputHashStr);
+            getPathsIDs(inputHashStr);
             long finish = System.currentTimeMillis();
 
             System.out.println("Converting string to xml: " + convertTime + "ms");
-            System.out.println("Getting paths from input query: " + (finish-start-creatingMapTime-convertTime) + "ms");
+            System.out.println("Getting paths from input query: " + (finish-start-convertTime) + "ms");
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -111,43 +121,13 @@ public class InputPreparator {
         }
     }
 
-    private static long getPathsIDs(HashSet<String> inputHashStr){
-
-        long start = System.currentTimeMillis();
-        Stream<String> lines = InputFileReader.readFile(PropertyLoader.loadProperty("pathToIdFile"));
-        HashMap<String, Integer> mappingHash = new HashMap<>();
-
-        lines.forEach(l->{
-            int firstSplit = l.indexOf('_');
-            synchronized (mappingHash){
-                mappingHash.put(l.substring(0, firstSplit), Integer.parseInt(l.substring(firstSplit+1)));
-            }
-        });
-        long finish = System.currentTimeMillis();
-        long creatingMapTime = finish - start;
-        System.out.println("Converting file to hashmap: " + creatingMapTime + "ms");
-
-
+    private void getPathsIDs(HashSet<String> inputHashStr){
         for(String s : inputHashStr){
-            inputHash.add(mappingHash.get(s));
+            inputHash.add(grammarFiles.getMappingHash().get(s));
         }
-
-        return creatingMapTime;
-
-        /*lines.forEach(s ->{
-            int split = s.indexOf('_');
-            if(inputHashStr.contains(s.substring(0, split))) {
-                synchronized (inputHash) {
-                    inputHash.add(Integer.parseInt(s.substring(split+1)));
-                }
-            }
-        });*/
-
-
-
     }
 
-    public static HashSet<Integer> getInputPaths(){
+    public HashSet<Integer> getInputPaths(){
         return inputHash;
     }
 }

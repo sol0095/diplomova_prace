@@ -1,14 +1,10 @@
 package cz.vsb.application;
 
-import cz.vsb.application.files.FileToHashMapLoader;
-import cz.vsb.application.files.InputFileReader;
-import cz.vsb.application.files.PathFileWriter;
-import cz.vsb.application.files.PropertyLoader;
+import cz.vsb.application.files.*;
 import cz.vsb.application.processors.*;
 import cz.vsb.application.selects.SelectComparator;
 import cz.vsb.application.selects.SelectWithSimilarity;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
@@ -17,10 +13,10 @@ public class Application{
 
     public static void runApplication(){
 
-        char grammar = PropertyLoader.loadProperty("grammar").charAt(0);
+     /*   char grammar = PropertyLoader.loadProperty("grammar").charAt(0);
         String queryStmt = getStmtName(grammar);
 
-        if(Boolean.parseBoolean(PropertyLoader.loadProperty("generatePathsFile")))
+       if(Boolean.parseBoolean(PropertyLoader.loadProperty("generatePathsFile")))
             writePathsTofile(queryStmt);
         try {
             calculateSimilarity(grammar, queryStmt);
@@ -30,7 +26,7 @@ public class Application{
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private static void writePathsTofile(String queryStmt){
@@ -84,34 +80,28 @@ public class Application{
         System.out.println("Writing time: " + (finish-start) + "ms");
     }
 
-    private static void calculateSimilarity(char grammar, String queryStmt) throws InterruptedException, IOException {
+    public static SelectWithSimilarity[] calculateSimilarity(char grammar, String queryStmt, String query) throws InterruptedException, IOException {
+
+        InputPreparator inputPreparator = new InputPreparator();
+
+        GrammarState grammarState = inputPreparator.prepareInput(query, grammar, queryStmt);
+
+        if(grammarState != GrammarState.CORRECT){
+            SelectWithSimilarity[] empty = new SelectWithSimilarity[1];
+            empty[0] = grammarState == GrammarState.EMPTY ?
+                    new SelectWithSimilarity("No similar query found.", 0.0, -1) :
+                    new SelectWithSimilarity("Wrong query syntax.", 0.0, -1);
+            return empty;
+        }
+
+        GrammarFiles grammarFiles = FilesLoader.getGrammar(grammar);
+
+        Map<Integer,String> paths = grammarFiles.getPaths();
 
         long start = System.currentTimeMillis();
-
-        InputThread inputThread = new InputThread(grammar, queryStmt);
-        inputThread.start();
-
-        SelectsFileThread selectsFileThread = new SelectsFileThread();
-        selectsFileThread.start();
-
-        FileToHashMapLoader pathsLoader = new FileToHashMapLoader(InputFileReader.readFile(PropertyLoader.loadProperty("pathIdWithRowIds")));
-        pathsLoader.start();
-
-        PathsSizeThread pathsSizeThread = new PathsSizeThread();
-        pathsSizeThread.start();
-
-        inputThread.join();
-        pathsLoader.join();
-        Map<Integer,String> paths = pathsLoader.getMap();
-
-        long finish = System.currentTimeMillis();
-        System.out.println("Loading files and total prepare time: " + (finish-start) + "ms");
-
-        start = System.currentTimeMillis();
         ArrayList<Cursor> cursors = new ArrayList<>();
 
-        HashSet<Integer> pathIds = InputPreparator.getInputPaths();
-        int size = pathIds.size();
+        HashSet<Integer> pathIds = inputPreparator.getInputPaths();
         for(Integer i : pathIds){
             if(paths.containsKey(i)){
                 String[] idsStr = paths.get(i).split(",");
@@ -120,13 +110,13 @@ public class Application{
         }
         int cursorsCount = cursors.size();
 
-        finish = System.currentTimeMillis();
+        long finish = System.currentTimeMillis();
         System.out.println("Get cursors time: " + (finish-start) + "ms");
 
         start = System.currentTimeMillis();
 
-        HashMap<Integer, Integer> intersection = new HashMap<>();
-        HashMap<Integer, Integer> nonIntersection = new HashMap<>();
+        ArrayList<SelectWithSimilarity> resultList = new ArrayList<>();
+
         while(cursors.size() > 0){
             int min = cursors.get(0).getCurrent();
             int count = 0;
@@ -147,52 +137,26 @@ public class Application{
                     i--;
                 }
             }
-
-            intersection.put(min, count);
-            nonIntersection.put(min, cursorsCount-count);
+            double similarity = (double)count/(double)(grammarFiles.getPathsSize().get(min)+cursorsCount-count)*100;
+            similarity = Math.round(similarity*100.0) / 100.0;
+            resultList.add(new SelectWithSimilarity((grammarFiles.getQueries().get(min).getQuery()), similarity, grammarFiles.getQueries().get(min).getRowId()));
         }
 
         finish = System.currentTimeMillis();
         System.out.println("Computing time: " + (finish-start) + "ms");
 
-        ArrayList<SelectWithSimilarity> resultList = new ArrayList<>();
-        selectsFileThread.join();
-        pathsSizeThread.join();
-
-        intersection.forEach((k,v)->{
-            double similarity = (double)v/(double)(pathsSizeThread.getPathsSize().get(k)+nonIntersection.get(k));
-            resultList.add(new SelectWithSimilarity(selectsFileThread.getQueries().get(k), similarity));
-        });
 
         start = System.currentTimeMillis();
         Collections.sort(resultList, new SelectComparator());
         finish = System.currentTimeMillis();
         System.out.println("Sorting time: " + (finish-start) + "ms");
 
-        System.out.println("Total queries compared: " + resultList.size());
 
-        for(int i = 0; i < 20; i++){
-            System.out.println(resultList.get(i).getQuery());
-            System.out.println(resultList.get(i).getSimilarity());
-        }
-    }
+        SelectWithSimilarity[] top20 = new SelectWithSimilarity[20];
 
-    private static String getStmtName(char grammar){
-        String queryStmt = null;
-        switch(grammar) {
-            case '0':
-                queryStmt = "sqlStatement";
-                break;
-            case '1':
-                queryStmt = "sql_stmt";
-                break;
-            case '2':
-                queryStmt = "sql_stmt";
-                break;
-            case '3':
-                queryStmt = "sql_stmt";
-                break;
-        }
-        return queryStmt;
+        for(int i = 0; i < 20; i++)
+            top20[i] = resultList.get(i);
+
+        return top20;
     }
 }
