@@ -2,6 +2,7 @@ package cz.vsb.application.files;
 
 import cz.vsb.application.selects.Select;
 
+import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
@@ -26,10 +27,16 @@ public class GrammarFiles extends Thread{
 
     @Override
     public void run() {
-        loadMappingFile();
-        loadPathIdFile();
-        loadSelectsFile();
-        loadPathsSizeFile();
+        try {
+            loadMappingFile();
+            loadPathIdFile();
+            loadSelectsFile();
+            loadPathsSizeFile();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            System.out.println("Missing file or incorrect file name, application will be terminated!");
+            System.exit(-1);
+        }
     }
 
     public HashMap<String, Integer> getMappingHash() {
@@ -48,7 +55,7 @@ public class GrammarFiles extends Thread{
         return pathsSize;
     }
 
-    private void loadMappingFile(){
+    private void loadMappingFile() throws RuntimeException{
         Stream<String> lines = InputFileReader.readFile(mappingProp);
 
         lines.forEach(l->{
@@ -59,7 +66,7 @@ public class GrammarFiles extends Thread{
         });
     }
 
-    private void loadPathIdFile(){
+    private void loadPathIdFile() throws RuntimeException{
         Stream<String> lines = InputFileReader.readFile(pathIdProp);
 
         lines.forEach(l->{
@@ -70,7 +77,7 @@ public class GrammarFiles extends Thread{
         });
     }
 
-    private void loadSelectsFile() {
+    private void loadSelectsFile() throws RuntimeException {
         Stream<String> lines = InputFileReader.readFile(selectsProp);
 
         lines.forEach(l->{
@@ -87,7 +94,7 @@ public class GrammarFiles extends Thread{
         });
     }
 
-    private void loadPathsSizeFile(){
+    private void loadPathsSizeFile() throws RuntimeException{
         Stream<String> pathsSizeLines = InputFileReader.readFile(pathsSizeProp);
         pathsSizeLines.forEach(s -> {
             String[] pairs = s.split(",");

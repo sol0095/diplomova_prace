@@ -58,10 +58,10 @@ public class FilesLoader {
                 grammarFiles = sqlite;
                 break;
             case '2':
-                grammarFiles = plsql;
+                grammarFiles = tsql;
                 break;
             case '3':
-                grammarFiles = tsql;
+                grammarFiles = plsql;
                 break;
         }
 

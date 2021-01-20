@@ -39,10 +39,10 @@ public class GrammarController {
                 queryStmt = "sql_stmt";
                 break;
             case '2':
-                queryStmt = "sql_stmt";
+                queryStmt = "select_statement";
                 break;
             case '3':
-                queryStmt = "sql_stmt";
+                queryStmt = "select_statement";
                 break;
         }
         return queryStmt;
