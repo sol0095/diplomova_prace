@@ -24,4 +24,4 @@ V souboru file.properties lze nalézt tyto konfigurace:
 ##############################################################
 Pro správné fungování je nutné všechny uvedené konfigurace (cesty) nastavit.
 Pozor na lomítka v absolutních cestách. Pokud se zadá absolutní cesta s opačným lomítkem, vyvolá se výjimka.
-Soubory lze vygenerovat druhou aplikací v rámci diplomové práce viz ().
+Soubory lze vygenerovat druhou aplikací v rámci diplomové práce viz. https://github.com/sol0095/diplomova_prace/tree/master/app_for_files.
