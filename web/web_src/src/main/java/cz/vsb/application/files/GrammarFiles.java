@@ -91,14 +91,10 @@ public class GrammarFiles extends Thread{
     private void loadPathsSizeFile(){
         Stream<String> pathsSizeLines = InputFileReader.readFile(pathsSizeProp);
         pathsSizeLines.forEach(s -> {
-            String[] pairs = s.split(",");
-            for (int i=0;i<pairs.length;i++) {
-                String pair = pairs[i];
-                String[] keyValue = pair.split("=");
+            String[] keyValue = s.split("=");
 
-                synchronized (pathsSize){
-                    pathsSize.put(Integer.valueOf(keyValue[0]), Integer.valueOf(keyValue[1]));
-                }
+            synchronized (pathsSize){
+                pathsSize.put(Integer.valueOf(keyValue[0]), Integer.valueOf(keyValue[1]));
             }
         });
     }

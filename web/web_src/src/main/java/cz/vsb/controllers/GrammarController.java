@@ -18,14 +18,7 @@ public class GrammarController {
     @CrossOrigin(origins = "*")
     public SelectWithSimilarity[] getData(@RequestParam String query, @RequestParam char grammar) {
         String queryStmt = getStmtName(grammar);
-        try {
-            return Application.calculateSimilarity(grammar, queryStmt, query);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return Application.calculateSimilarity(grammar, queryStmt, query);
     }
 
     private static String getStmtName(char grammar){

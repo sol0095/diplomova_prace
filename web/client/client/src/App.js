@@ -11,22 +11,25 @@ export default class App extends React.Component {
     this.state = {
       query: "",
       grammar: '0',
-      data: []
+      data: [],
+      history: localStorage.getItem('history') ? JSON.parse(localStorage.getItem('history')) : []
     }
   }
 
 
   getQueries(){
+    window.scrollTo(0, 0);
     this.setState({data: [], loadingData: true});
+    this.addItem();
 
-    axios.get(`/query_data`, {params: {query: this.state.query, grammar: this.state.grammar}})
+    axios.get(`http://localhost:8080/query_data`, {params: {query: this.state.query, grammar: this.state.grammar}})
     .then(res => {
       console.log(res);
       if(res.data != null && res.data.length > 0){
         this.setState({data: res.data}, ()=>console.log(this.state.data));
       }
       else{
-        console.log("error in gramamr");
+        console.log("error in grammar");
       }
 
     }).catch(function (error) {
@@ -47,12 +50,50 @@ export default class App extends React.Component {
   }
 
 
+  addItem(){
+    if(!this.state.history.includes(this.state.query)){
+      this.setState({history: [...this.state.history, this.state.query]}, ()=>{
+        localStorage.setItem('history', JSON.stringify(this.state.history));
+      })
+    }
+  }
+
+  deleteItem(item){
+    let filteredHistory = this.state.history.filter(i => i !== item)
+    this.setState({history: filteredHistory}, ()=>{
+      localStorage.setItem('history', JSON.stringify(this.state.history))});
+  }
+
+
+  deleteAllItems(){
+    if(localStorage.getItem('history')){
+      localStorage.removeItem('history');
+    }
+
+    this.setState({history: []});
+  }
+
+  selectItem(i){
+    this.setState({query: i});
+  }
+
   render() {
 
-    const listItems = this.state.data.map((d) =>
+    const queryItems = this.state.data.map((d) =>
       <tr className="item" onClick={()=>this.findOnWeb(d.rowId)}>
         <td className="item-similarity">{d.similarity + " %"}</td>
-        <td className="item-query">{d.query}</td>
+        <td className="item-query"><pre>{d.query}</pre></td>
+      </tr>
+    );
+
+    const historyItems = this.state.history.map((i) =>
+      <tr className="history-item">
+        <td className="history-item-text" onClick={()=>this.selectItem(i)}>
+          <pre>{i}</pre>
+        </td>
+        <td className="history-item-img">
+          <img className="delete.history" src="red_cross.png" alt="Delete from history" onClick={()=>this.deleteItem(i)}></img>
+        </td>
       </tr>
     );
    
@@ -64,8 +105,8 @@ export default class App extends React.Component {
           <p>Search for most similar queries.</p>
         </div>
         
-        <div class="row">
-          <div className="column side">
+        <div className="row">
+          <div className="column side left">
             <h2>Set Params</h2>
             <textarea placeholder="Type your query here..." value={this.state.query}  onChange={(event)=>this.setState({query: event.target.value})}></textarea>
           
@@ -75,7 +116,7 @@ export default class App extends React.Component {
               <input id="radio-sqlite" type="radio" value="1" name="grammar" checked={this.state.grammar === "1"}/> 
               <label for="radio-sqlite">SQLite</label>
               <input id="radio-pgsql" type="radio" value="2" name="grammar" checked={this.state.grammar === "2"}/> 
-              <label for="radio-pgsql">PgSQL</label>
+              <label for="radio-pgsql">PlSQL</label>
               <input id="radio-tsql" type="radio" value="3" name="grammar" checked={this.state.grammar === "3"}/> 
               <label for="radio-tsql">T-SQL</label>
             </div>
@@ -93,24 +134,35 @@ export default class App extends React.Component {
             {
               !this.state.loadingData && 
               <table className="items">
-              <thead>
-                <tr>
-                  <th className="item-similarity-title">Similarity</th>
-                  <th className="item-query-title">Query</th>
-                </tr>
-              </thead>
-              <tbody> 
-              {
-                this.state.data != null &&  listItems
-              }
-              </tbody>
-            </table>
+                <thead>
+                  <tr>
+                    <th className="item-similarity-title">Similarity</th>
+                    <th className="item-query-title">Query</th>
+                  </tr>
+                </thead>
+                <tbody> 
+                {
+                  this.state.data != null &&  queryItems
+                }
+                </tbody>
+              </table>
             }
             
           </div>
 
-          <div className="column side">
+          <div className="column side right">
             <h2>History</h2>
+            <div className="scrollable-history">
+              <table className="history-items">
+                <tbody> 
+                {
+                  this.state.history != null &&  historyItems
+                }
+                </tbody>
+              </table>
+            </div>
+            <button className="clear-button" type="submit" onClick={()=>this.deleteAllItems()}>Clear History</button>
+           
           </div>
 
         </div>

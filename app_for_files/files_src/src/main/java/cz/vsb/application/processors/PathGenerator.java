@@ -19,9 +19,9 @@ import java.util.HashSet;
 public class PathGenerator {
 
     private static int mainTagLength = "</sqlSelects>".length();
-    public static DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    private DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
-    private static void writeToFile(ArrayList<SelectWithPaths> selectsWithPaths, PathsMap pathsMap) {
+    private void writeToFile(ArrayList<SelectWithPaths> selectsWithPaths, PathsMap pathsMap, PathFileWriter pathFileWriter) {
         StringBuilder strTofile = new StringBuilder();
 
         for(SelectWithPaths selectWithPaths : selectsWithPaths){
@@ -52,10 +52,10 @@ public class PathGenerator {
             }
         }
 
-        PathFileWriter.write( strTofile.toString());
+        pathFileWriter.write( strTofile.toString());
     }
 
-    public static ArrayList<SelectWithPaths> generate(String line, PathsMap pathsMap, String queryStmt){
+    public ArrayList<SelectWithPaths> generate(String line, PathsMap pathsMap, String queryStmt, PathFileWriter pathFileWriter){
         ArrayList<SelectWithPaths> selectsWithPaths = new ArrayList<>();
 
         if(line.length() > mainTagLength){
@@ -66,10 +66,6 @@ public class PathGenerator {
                 String selectCode = document.getElementsByTagName("selectCode").item(0).getFirstChild().getNodeValue();
                 int rowId = Integer.parseInt(document.getElementsByTagName("rowId").item(0).getFirstChild().getNodeValue());
 
-                if(nodeList.getLength() > 1){
-                    System.out.println("error");
-                }
-
                 for (int i = 0; i < nodeList.getLength(); i++) {
                     ArrayList<String> pathsInTree = new ArrayList<>();
                     XmlTreeView.getLeafPaths((Element) nodeList.item(i), new StringBuilder(), pathsInTree);
@@ -79,7 +75,7 @@ public class PathGenerator {
                         pathsMap.uniqueID++;
                     }
                 }
-                writeToFile(selectsWithPaths, pathsMap);
+                writeToFile(selectsWithPaths, pathsMap, pathFileWriter);
 
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();

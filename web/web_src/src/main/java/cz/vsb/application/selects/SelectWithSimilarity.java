@@ -27,9 +27,15 @@ public class SelectWithSimilarity {
     }
 
     public void formatQuery(char grammar){
-        if(grammar == '2' || grammar == '3')
-            this.query = SqlFormatter.of("pl/sql").format(query);
-        else
-            this.query = SqlFormatter.format(query);
+        try{
+            if(grammar == '2' || grammar == '3')
+                this.query = SqlFormatter.of("pl/sql").format(query);
+            else
+                this.query = SqlFormatter.format(query);
+        }catch (RuntimeException e){
+            System.out.println(query);
+            System.out.println("This SQL code cannot be formatted!");
+        }
+
     }
 }

@@ -5,9 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class PathFileWriter {
-    private static BufferedWriter bufferedWriter;
+    private BufferedWriter bufferedWriter;
 
-    public static synchronized void write(String str){
+    public synchronized void write(String str){
         try {
             bufferedWriter.write(str);
         } catch (IOException e) {
@@ -15,7 +15,7 @@ public class PathFileWriter {
         }
     }
 
-    public static void startWriting(String path){
+    public void startWriting(String path){
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(path, true));
         } catch (IOException e) {
@@ -23,7 +23,7 @@ public class PathFileWriter {
         }
     }
 
-    public static void stopWriting(){
+    public void stopWriting(){
         try {
             bufferedWriter.close();
         } catch (IOException e) {

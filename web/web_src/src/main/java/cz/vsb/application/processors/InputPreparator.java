@@ -29,7 +29,7 @@ public class InputPreparator {
     private GrammarFiles grammarFiles;
 
     public GrammarState prepareInput(String query, char grammar, String queryStmt){
-        long start= System.currentTimeMillis();
+       // long start= System.currentTimeMillis();
 
 
         ParseTree parseTree = null;
@@ -41,38 +41,42 @@ public class InputPreparator {
             return pair.getFirst();
 
         query = pair.getSecond();
-        System.out.println("Checking input time: " + (System.currentTimeMillis()-start) + "ms");
+        //System.out.println("Checking input time: " + (System.currentTimeMillis()-start) + "ms");
 
         if(grammar == '0'){
             MySqlLexer lexer = new MySqlLexer(fromString(query));
             parser = new MySqlParser(new CommonTokenStream(lexer));
+            removeErrorListeners(lexer, parser);
             parseTree = ((MySqlParser)parser).root();
         }
         else if(grammar == '1'){
             SQLiteLexer lexer = new SQLiteLexer(fromString(query));
             parser = new SQLiteParser(new CommonTokenStream(lexer));
+            removeErrorListeners(lexer, parser);
             parseTree = ((SQLiteParser)parser).parse();
         }
         else if(grammar == '2'){
             TSqlLexer lexer = new TSqlLexer(fromString(query));
             parser = new TSqlParser(new CommonTokenStream(lexer));
+            removeErrorListeners(lexer, parser);
             parseTree = ((TSqlParser)parser).tsql_file();
         }
         else if(grammar == '3'){
             PlSqlLexer lexer = new PlSqlLexer(fromString(query));
             parser = new PlSqlParser(new CommonTokenStream(lexer));
+            removeErrorListeners(lexer, parser);
             parseTree = ((PlSqlParser)parser).sql_script();
         }
 
         if(parseTree != null && parser.getNumberOfSyntaxErrors() == 0){
-            long finish= System.currentTimeMillis();
-            System.out.println("Grammar time: " + (finish-start) + "ms");
+            //long finish= System.currentTimeMillis();
+           // System.out.println("Grammar time: " + (finish-start) + "ms");
 
-            start = System.currentTimeMillis();
+           // start = System.currentTimeMillis();
             ResultPreparator resultPreparator = new ResultPreparator();
             resultPreparator.prepareData(query, parseTree, parser);
-            finish = System.currentTimeMillis();
-            System.out.println("Converting tree to string xml time: " + (finish-start) + "ms");
+          //  finish = System.currentTimeMillis();
+          //  System.out.println("Converting tree to string xml time: " + (finish-start) + "ms");
 
             grammarFiles = FilesLoader.getGrammar(grammar);
             prepareInputPaths(resultPreparator.getXmlData(), queryStmt);
@@ -102,15 +106,15 @@ public class InputPreparator {
     }
 
     private void prepareInputPaths(String xmlTree, String queryStmt){
-        long start = System.currentTimeMillis();
-        long start2 = System.currentTimeMillis();
+       // long start = System.currentTimeMillis();
+      //  long start2 = System.currentTimeMillis();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         try {
             ArrayList<String> inputPaths = new ArrayList<>();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document document = dBuilder.parse(new InputSource(new StringReader(xmlTree)));
-            long finish2 = System.currentTimeMillis();
-            long convertTime = finish2 - start2;
+          //  long finish2 = System.currentTimeMillis();
+          //  long convertTime = finish2 - start2;
 
 
             XmlTreeView.getLeafPaths((Element)(document.getElementsByTagName(queryStmt).item(0)), new StringBuilder(), inputPaths);
@@ -125,10 +129,10 @@ public class InputPreparator {
             }
 
             getPathsIDs(inputHashStr);
-            long finish = System.currentTimeMillis();
+            //long finish = System.currentTimeMillis();
 
-            System.out.println("Converting string to xml: " + convertTime + "ms");
-            System.out.println("Getting paths from input query: " + (finish-start-convertTime) + "ms");
+          //  System.out.println("Converting string to xml: " + convertTime + "ms");
+           // System.out.println("Getting paths from input query: " + (finish-start-convertTime) + "ms");
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {

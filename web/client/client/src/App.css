@@ -17,6 +17,9 @@
 /* Middle column */
 .column.middle {
   width: 50%;
+  left: 25%;
+  position: relative;
+  right: 25%;
 }
 
 .bottom{
@@ -63,6 +66,7 @@ th, td{
 .item-query{
   width: 70%;
   text-align: left;
+  word-break: break-all;
 }
 
 table{
@@ -76,7 +80,7 @@ thead{
 
 tbody tr:nth-child(even) {background: #eeeeee}
 
-tbody tr{
+.items tbody tr{
   cursor: pointer;
 }
 
@@ -100,8 +104,26 @@ textarea{
   margin-top: 5px;
   font-size: 16px;
   cursor: pointer;
+  border: 2px solid #444;
 }
 
+.clear-button{
+  width: 50%;
+  border: none;
+  border-radius: 5px;
+  background-color: #fbb;
+  padding: 10px 20px;
+  margin-top: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  border: 2px solid #c44;
+  margin-top: 20px;
+}
+
+
+.clear-button:hover {
+  background-color: #fee;
+}
 
 .submit-button:hover {
   background-color: #888;
@@ -140,4 +162,67 @@ textarea{
     background-color: #bfb;
     border-color: #4c4;
     border-style: dashed;
+}
+
+pre{
+  white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;
+}
+
+.history-items{
+  width: 70%;
+  margin: auto;
+}
+
+.left{
+  position: fixed;
+  left: 0;
+}
+
+.right{
+  position: fixed;
+  right: 0;
+}
+
+
+.history-item-text{
+  width: 90%;
+  text-align: left;
+  word-break: break-all;
+  cursor: pointer;
+}
+
+/*.history-item-text pre{
+  max-height: 40px;
+  overflow: hidden;
+}*/
+
+/*.history-item-text pre:hover{
+  max-height: none;
+  overflow: visible;
+}
+
+.history-item-text pre::after{
+  content: "..."
+}*/
+
+
+.history-item-img img{
+  width: 20px;
+  cursor: pointer;
+}
+
+
+
+.scrollable-history{
+  max-height: 65%;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 0px;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
 }

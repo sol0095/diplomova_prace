@@ -13,6 +13,8 @@ public class InputFileReader {
             return Files.lines(Paths.get(path), StandardCharsets.ISO_8859_1).parallel();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Missing file or incorrect file name, application will be terminated!");
+            System.exit(-1);
         }
 
         return  null;

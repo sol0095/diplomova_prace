@@ -1,27 +1,33 @@
 Nápověda pro nástroj
 ##############################################################
-V souboru file.properties lze nalézt tyto konfigurace:
-	mysqlSelectsFile=cesta/MySqlSelects.txt
-	mysqlPathToIdFile=cesta/MySqlPathToId.txt
-	mysqlPathIdWithRowIdsFile=cesta/MySqlPathIdWithRowIds.txt
-	mysqlPathsSizeFile=cesta/MySqlPathsSize.txt
-
-	sqliteSelectsFile=cesta/SQLiteSelects.txt
-	sqlitePathToIdFile=cesta/SQLitePathToId.txt
-	sqlitePathIdWithRowIdsFile=cesta/SQLitePathIdWithRowIds.txt
-	sqlitePathsSizeFile=cesta/SQLitePathsSize.txt
-
-	tsqlSelectsFile=cesta/TSqlSelects.txt
-	tsqlPathToIdFile=cesta/TSqlPathToId.txt
-	tsqlPathIdWithRowIdsFile=cesta/TSqlPathIdWithRowIds.txt
-	tsqlPathsSizeFile=cesta/TSqlPathsSize.txt
-
-	plsqlSelectsFile=cesta/PlSqlSelects.txt
-	plsqlPathToIdFile=cesta/PlSqlPathToId.txt
-	plsqlPathIdWithRowIdsFile=cesta/PlSqlPathIdWithRowIds.txt
-	plsqlPathsSizeFile=cesta/PlSqlPathsSize.txt
+V souboru file.properties lze nalézt například tyto konfigurace pro MySQL:
+	mysqlSelectsFile= cesta k souboru, kde se nachází dotazy, jejich unikátní ID a rowID pro MySQL.
+	mysqlPathToIdFile= cesta k souboru, kde se nachází cesty a jejich unikátní ID pro MySQL.
+	mysqlPathIdWithRowIdsFile= cesta k souboru, kde se nachází index pro MySQL. 
+	mysqlPathsSizeFile= cesta k souboru, kde se nachází kolikrát daný dotaz byl obsažen v dané cestě.
 
 ##############################################################
-Pro správné fungování je nutné všechny uvedené konfigurace (cesty) nastavit.
+Pro správné fungování je nutné všechny konfigurace (cesty) nastavit pro každou gramatiku.
 Pozor na lomítka v absolutních cestách. Pokud se zadá absolutní cesta s opačným lomítkem, vyvolá se výjimka.
 Soubory lze vygenerovat druhou aplikací v rámci diplomové práce viz. https://github.com/sol0095/diplomova_prace/tree/master/app_for_files.
+
+Příklad:
+	mysqlSelectsFile=data/MySQL/MySqlSelects.txt
+	mysqlPathToIdFile=data/MySQL/MySqlPathToId.txt
+	mysqlPathIdWithRowIdsFile=data/MySQL/MySqlPathIdWithRowIds.txt
+	mysqlPathsSizeFile=data/MySQL/MySqlPathsSize.txt
+
+	sqliteSelectsFile=data/SQLite/SQLiteSelects.txt
+	sqlitePathToIdFile=data/SQLite/SQLitePathToId.txt
+	sqlitePathIdWithRowIdsFile=data/SQLite/SQLitePathIdWithRowIds.txt
+	sqlitePathsSizeFile=data/SQLite/SQLitePathsSize.txt
+
+	tsqlSelectsFile=data/TSQL/TSqlSelects.txt
+	tsqlPathToIdFile=data/TSQL/TSqlPathToId.txt
+	tsqlPathIdWithRowIdsFile=data/TSQL/TSqlPathIdWithRowIds.txt
+	tsqlPathsSizeFile=data/TSQL/TSqlPathsSize.txt
+
+	plsqlSelectsFile=data/PLSQL/PlSqlSelects.txt
+	plsqlPathToIdFile=data/PLSQL/PlSqlPathToId.txt
+	plsqlPathIdWithRowIdsFile=data/PLSQL/PlSqlPathIdWithRowIds.txt
+	plsqlPathsSizeFile=data/PLSQL/PlSqlPathsSize.txt
