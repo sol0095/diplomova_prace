@@ -26,6 +26,7 @@ export default class App extends React.Component {
     .then(res => {
       console.log(res);
       if(res.data != null && res.data.length > 0){
+	
         this.setState({data: res.data}, ()=>console.log(this.state.data));
       }
       else{
@@ -51,7 +52,7 @@ export default class App extends React.Component {
 
 
   addItem(){
-    if(!this.state.history.includes(this.state.query)){
+    if(!this.state.history.includes(this.state.query) ){
       this.setState({history: [...this.state.history, this.state.query]}, ()=>{
         localStorage.setItem('history', JSON.stringify(this.state.history));
       })
@@ -176,18 +177,3 @@ export default class App extends React.Component {
   }
 
 }
-
-
-
-/*
-function ble(){
-  const listItems = this.state.data.map((d) => <div>{d.similarity}{d.query}</div>);
-  const a =
-  <div>
-  <input value={this.state.query}  onChange={(event)=>this.setState({query: event.target.value})}></input>
-  <button onClick={()=>this.getQueries()}></button>
-  <div>
-    {listItems}
-  </div>
-</div>
-}*/
