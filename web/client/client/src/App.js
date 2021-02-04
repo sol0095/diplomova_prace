@@ -117,9 +117,9 @@ export default class App extends React.Component {
               <input id="radio-sqlite" type="radio" value="1" name="grammar" checked={this.state.grammar === "1"}/> 
               <label for="radio-sqlite">SQLite</label>
               <input id="radio-pgsql" type="radio" value="2" name="grammar" checked={this.state.grammar === "2"}/> 
-              <label for="radio-pgsql">PlSQL</label>
+              <label for="radio-pgsql">T-SQL</label>
               <input id="radio-tsql" type="radio" value="3" name="grammar" checked={this.state.grammar === "3"}/> 
-              <label for="radio-tsql">T-SQL</label>
+              <label for="radio-tsql">PL/SQL</label>
             </div>
 
             <button className="submit-button" type="submit"  onClick={()=>this.getQueries()}>Search!</button>
