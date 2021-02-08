@@ -20,14 +20,15 @@ export default class App extends React.Component {
   getQueries(){
     window.scrollTo(0, 0);
     this.setState({data: [], loadingData: true});
-    this.addItem();
+    //this.addItem();
 
-    axios.get(`http://localhost:8080/query_data`, {params: {query: this.state.query, grammar: this.state.grammar}})
+    axios.get(`http://138.201.16.189:8080/query_data`, {params: {query: this.state.query, grammar: this.state.grammar}})
     .then(res => {
       console.log(res);
-      if(res.data != null && res.data.length > 0){
+      if(res.data != null && res.data.length > 0 && res.data[0].rowId >= 0){
 	
         this.setState({data: res.data}, ()=>console.log(this.state.data));
+	this.addItem();
       }
       else{
         console.log("error in grammar");

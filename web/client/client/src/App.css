@@ -196,13 +196,21 @@ pre{
 }
 
 .history-item-text pre{
-  max-height: 40px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-line-clamp: 5; /* number of lines to show */
   -webkit-box-orient: vertical;
 }
+
+
+
+
+
+/*.history-item-text pre{
+  max-height: 40px;
+  overflow: hidden;
+}*/
 
 /*.history-item-text pre:hover{
   max-height: none;
