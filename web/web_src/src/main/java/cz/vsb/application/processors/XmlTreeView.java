@@ -7,7 +7,9 @@ import java.util.ArrayList;
 
 public class XmlTreeView {
     private static String[] searchedWords = {
-            "JOIN", "GROUP BY", "ORDER BY", "MAX", "MIN", "SUM", "COUNT", "ASC", "DESC", "AND", "OR", "=", "<=", ">=", "!=", ">", "<", "NULL"
+            "JOIN", "GROUP BY", "ORDER BY", "MAX", "MIN", "SUM", "COUNT", "ASC", "DESC", "AND", "OR", "=", "<=", ">=", "!=", ">", "<", "<>", "NULL", "IN",
+            "LIKE", "ANY", "ALL", "BETWEEN", "EXISTS", "SOME", "REGEXP", "CONCAT", "LEFT", "LEN", "LOWER", "REPLACE", "REVERSE", "RIGHT", "STR", "SUBSTRING",
+            "UPPER", "POWER", "SQRT", "EXP", "ROUND", "RAND", "DATEADD", "DATEDIFF", "DATEPART", "DAY", "GETDATE", "MONTH", "YEAR", "CAST", "ISNULL", "COALESCE"
     };
 
     public static void getLeafPaths(Element elem, StringBuilder path, ArrayList<String> pathsInTree) {
