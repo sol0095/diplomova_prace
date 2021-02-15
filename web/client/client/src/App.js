@@ -22,13 +22,17 @@ export default class App extends React.Component {
     this.setState({data: [], loadingData: true});
     //this.addItem();
 
-    axios.get(`http://localhost:8080/query_data`, {params: {query: this.state.query, grammar: this.state.grammar}})
+    axios.get(`http://localhost:8080/query_data`, {params: {query: Buffer.from(this.state.query).toString('base64'), grammar: this.state.grammar}})
     .then(res => {
       console.log(res);
       if(res.data != null && res.data.length > 0){
 	
-        this.setState({data: res.data}, ()=>console.log(this.state.data));
-	this.addItem();
+        this.setState({data: res.data}, ()=>{
+			if(res.data[0].rowId > -1){
+				this.addItem();
+			}
+		});
+
       }
       else{
         console.log("error in grammar");

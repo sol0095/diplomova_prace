@@ -3,6 +3,7 @@ package cz.vsb.controllers;
 import cz.vsb.application.Application;
 import cz.vsb.application.files.PropertyLoader;
 import cz.vsb.application.selects.SelectWithSimilarity;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ public class GrammarController {
     @CrossOrigin(origins = "*")
     public SelectWithSimilarity[] getData(@RequestParam String query, @RequestParam char grammar) {
         String queryStmt = getStmtName(grammar);
-        return Application.calculateSimilarity(grammar, queryStmt, query);
+        return Application.calculateSimilarity(grammar, queryStmt, new String(Base64.decodeBase64(query.getBytes())));
     }
 
     private static String getStmtName(char grammar){

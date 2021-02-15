@@ -28,6 +28,10 @@ public class InputPreparator {
     private HashSet<Integer> inputHash = new HashSet<>();
     private GrammarFiles grammarFiles;
 
+    public InputPreparator(GrammarFiles grammarFiles){
+        this.grammarFiles = grammarFiles;
+    }
+
     public GrammarState prepareInput(String query, char grammar, String queryStmt){
        // long start= System.currentTimeMillis();
 
@@ -78,7 +82,6 @@ public class InputPreparator {
           //  finish = System.currentTimeMillis();
           //  System.out.println("Converting tree to string xml time: " + (finish-start) + "ms");
 
-            grammarFiles = FilesLoader.getGrammar(grammar);
             prepareInputPaths(resultPreparator.getXmlData(), queryStmt);
             return GrammarState.CORRECT;
         }

@@ -1,6 +1,7 @@
 Nápověda pro nástroj
 ##############################################################
-V souboru file.properties lze nalézt například tyto konfigurace pro MySQL:
+V souboru file.properties lze nalézt například tyto konfigurace pro MySQL a IP serveru:
+	fileUpdaterIP= IP adresa serveru (localhostu).
 	mysqlSelectsFile= cesta k souboru, kde se nachází dotazy, jejich unikátní ID a rowID pro MySQL.
 	mysqlPathToIdFile= cesta k souboru, kde se nachází cesty a jejich unikátní ID pro MySQL.
 	mysqlPathIdWithRowIdsFile= cesta k souboru, kde se nachází index pro MySQL. 
@@ -12,6 +13,8 @@ Pozor na lomítka v absolutních cestách. Pokud se zadá absolutní cesta s opa
 Soubory lze vygenerovat druhou aplikací v rámci diplomové práce viz. https://github.com/sol0095/diplomova_prace/tree/master/app_for_files.
 
 Příklad:
+	fileUpdaterIP=127.0.0.1
+
 	mysqlSelectsFile=data/MySQL/MySqlSelects.txt
 	mysqlPathToIdFile=data/MySQL/MySqlPathToId.txt
 	mysqlPathIdWithRowIdsFile=data/MySQL/MySqlPathIdWithRowIds.txt

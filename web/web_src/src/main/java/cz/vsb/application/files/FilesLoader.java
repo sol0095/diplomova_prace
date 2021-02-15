@@ -1,11 +1,17 @@
 package cz.vsb.application.files;
 
+
+import cz.vsb.application.GrammarLock;
+
+import java.util.concurrent.Semaphore;
+
 public class FilesLoader {
 
     private static GrammarFiles mysql;
     private static GrammarFiles tsql;
     private static GrammarFiles sqlite;
     private static GrammarFiles plsql;
+
 
     public static void loadFiles() throws InterruptedException {
         System.out.println("Loading files into hashmap...");
@@ -66,5 +72,27 @@ public class FilesLoader {
         }
 
         return grammarFiles;
+    }
+
+    public static void reloadFiles(){
+        Semaphore semaphore = GrammarLock.getSemaphore();
+
+        try {
+            semaphore.acquire(GrammarLock.getMaxLocks());
+            clearData();
+            setInstances();
+            runLoading();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            semaphore.release(GrammarLock.getMaxLocks());
+        }
+    }
+
+    private static void clearData(){
+        mysql.clearData();
+        sqlite.clearData();
+        tsql.clearData();
+        plsql.clearData();
     }
 }

@@ -98,4 +98,11 @@ public class GrammarFiles extends Thread{
             }
         });
     }
+
+    public void clearData(){
+        mappingHash = null;
+        pathsSize = null;
+        queries = null;
+        paths = null;
+    }
 }

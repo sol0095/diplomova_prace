@@ -7,54 +7,52 @@ import cz.vsb.application.selects.SelectWithSimilarity;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Application{
 
     public static SelectWithSimilarity[] calculateSimilarity(char grammar, String queryStmt, String query){
 
-        InputPreparator inputPreparator = new InputPreparator();
+        Semaphore semaphore = GrammarLock.getSemaphore();
+        SelectWithSimilarity[] sortedResult = null;
 
-        GrammarState grammarState = inputPreparator.prepareInput(query, grammar, queryStmt);
+        try {
+            semaphore.acquire();
+            GrammarFiles grammarFiles = FilesLoader.getGrammar(grammar);
 
-        if(grammarState != GrammarState.CORRECT){
+            InputPreparator inputPreparator = new InputPreparator(grammarFiles);
+
+            GrammarState grammarState = inputPreparator.prepareInput(query, grammar, queryStmt);
+
+            if(grammarState != GrammarState.CORRECT){
+                SelectWithSimilarity[] empty = new SelectWithSimilarity[1];
+                empty[0] = grammarState == GrammarState.EMPTY ?
+                        new SelectWithSimilarity("No similar query found.", 0.0, -1) :
+                        new SelectWithSimilarity("Wrong query syntax.", 0.0, -1);
+                return empty;
+            }
+
+            ArrayList<Cursor> cursors = createCursors(inputPreparator, grammarFiles);
+            ArrayList<SelectWithSimilarity> resultList = iterateCursors(cursors, grammarFiles);
+
+            Collections.sort(resultList, new SelectComparator());
+
+            sortedResult = getTop20(resultList, grammar);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            semaphore.release();
+        }
+
+        if(sortedResult == null){
             SelectWithSimilarity[] empty = new SelectWithSimilarity[1];
-            empty[0] = grammarState == GrammarState.EMPTY ?
-                    new SelectWithSimilarity("No similar query found.", 0.0, -1) :
-                    new SelectWithSimilarity("Wrong query syntax.", 0.0, -1);
+            empty[0] = new SelectWithSimilarity("Error on server.", 0.0, -1);
             return empty;
         }
 
-        GrammarFiles grammarFiles = FilesLoader.getGrammar(grammar);
-
-
-        //getting cursors
-      //  long start = System.currentTimeMillis();
-
-        ArrayList<Cursor> cursors = createCursors(inputPreparator, grammarFiles);
-
-        //long finish = System.currentTimeMillis();
-      //  System.out.println("Get cursors time: " + (finish-start) + "ms");
-
-
-        //computing similarity
-      //  start = System.currentTimeMillis();
-
-        ArrayList<SelectWithSimilarity> resultList = iterateCursors(cursors, grammarFiles);
-
-       // finish = System.currentTimeMillis();
-       // System.out.println("Computing time: " + (finish-start) + "ms");
-
-
-        //sorting
-        //start = System.currentTimeMillis();
-
-        Collections.sort(resultList, new SelectComparator());
-
-       // finish = System.currentTimeMillis();
-       // System.out.println("Sorting time: " + (finish-start) + "ms");
-
-
-        return getTop20(resultList, grammar);
+        return sortedResult;
     }
 
     private static ArrayList<Cursor> createCursors(InputPreparator inputPreparator, GrammarFiles grammarFiles){
