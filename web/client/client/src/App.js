@@ -84,6 +84,8 @@ export default class App extends React.Component {
   }
 
   render() {
+	let width = window.innerWidth;
+	let isMobile = width < 800 ? true : false
 
     const queryItems = this.state.data.map((d) =>
       <tr className="item" onClick={()=>this.findOnWeb(d.rowId)}>
@@ -103,7 +105,7 @@ export default class App extends React.Component {
       </tr>
     );
    
-  
+  if(!isMobile) {
     return (
       <React.Fragment>
         <div className="header">
@@ -180,5 +182,15 @@ export default class App extends React.Component {
       </React.Fragment>
     )
   }
+		if(isMobile){
+		  return (
+		  <React.Fragment>
+			<div className="header">
+			  <h1>Sorry, this app is not designed for mobiles or resolution is too small!</h1>
+			</div>
+		  </React.Fragment>
+			)
+		}
+	}
 
 }
