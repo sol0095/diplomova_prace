@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0924523-c974-428e-ad50-15b22846276d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/client/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/client/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/client/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/client/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/client/src/index.js" afterDir="false" />
-    </list>
+    <list default="true" id="c0924523-c974-428e-ad50-15b22846276d" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,7 +39,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -58,7 +51,7 @@
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
-      <option name="ALTERNATIVE_JRE_PATH" value="10" />
+      <option name="ALTERNATIVE_JRE_PATH" value="14" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="cz.vsb.Main" />
       <module name="DP" />
@@ -102,24 +95,22 @@
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$/.." />
+      <path value="$PROJECT_DIR$/client/client" />
     </ignored-roots>
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/cz/vsb/application/processors/InputPreparator.java</url>
-          <line>85</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="map" />
         <watch expression="pathsInTree" />
         <watch expression="pathsInTree.get(2)" />
         <watch expression="this" />
+        <watch expression="queryStmt" />
+        <watch expression="queryStmt" language="JAVA" />
+        <watch expression="resultPreparator" />
+        <watch expression="resultPreparator" language="JAVA" />
+        <watch expression="parser" />
+        <watch expression="tree" />
       </configuration>
     </watches-manager>
   </component>

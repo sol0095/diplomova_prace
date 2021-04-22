@@ -1,40 +1,43 @@
-Nápověda pro nástroj
+Nápověda pro webový IS
 ##############################################################
-V souboru file.properties lze nalézt například tyto konfigurace pro MySQL a konfiguraci IP serveru a konfiguraci pro definici funkcí:
+V souboru file.properties lze nalézt například tyto konfigurace pro MySQL, konfiguraci IP serveru a konfiguraci pro definici funkcí:
 	fileUpdaterIP= IP adresa serveru (localhostu).
 	mysqlSelectsFile= cesta k souboru, kde se nachází dotazy, jejich unikátní ID a rowID pro MySQL.
 	mysqlPathToIdFile= cesta k souboru, kde se nachází cesty a jejich unikátní ID pro MySQL.
-	mysqlPathIdWithRowIdsFile= cesta k souboru, kde se nachází index pro MySQL. 
-	mysqlPathsSizeFile= cesta k souboru, kde se nachází kolikrát daný dotaz byl obsažen v dané cestě.
+	mysqlPathIdWithIdsFile= cesta k souboru, kde se nachází index pro MySQL. 
+	mysqlPathsSizeFile= cesta k souboru, kde se nachází kolikrát byl daný dotaz obsažen v dané cestě.
 
-	functionsForSimilarity= nastavení funkcí pro SQL. Každá funkce musí být oddělená čárkou a mezerou (tzn. ", "). Slouží pro lepší výstup podobností SQL dotazů s danými funkcemi (záleží na situaci, někdy je to neúčinné). Je zde nutné nastavit ty samé funkce, které byly nastaveny ve vytváření souborů (aplikaci na soubory). K této konfiguraci byl přidán základní výčet funkcí viz příklad níže.
+	functionsForSimilarity= nastavení funkcí pro SQL. Každá funkce musí být oddělená čárkou a mezerou (tzn. ", "). 
+		Slouží pro lepší výstup podobností SQL dotazů s danými funkcemi (záleží na situaci, někdy je to neúčinné). 
+		Je zde nutné nastavit ty samé funkce, které byly nastaveny v generátoru souborů. 
+		K této konfiguraci byl přidán základní výčet funkcí viz příklad níže.
 
 ##############################################################
-Pro správné fungování je nutné všechny konfigurace (cesty) nastavit pro každou gramatiku.
+Pro správné fungování je nutné všechny konfigurace (a cesty) nastavit pro každou gramatiku.
 Pozor na lomítka v absolutních cestách. Pokud se zadá absolutní cesta s opačným lomítkem, vyvolá se výjimka.
-Soubory lze vygenerovat druhou aplikací v rámci diplomové práce viz. https://github.com/sol0095/diplomova_prace/tree/master/app_for_files.
+Soubory lze vygenerovat generátorem souborů v rámci diplomové práce viz složka generátor_souborů.
 
 Příklad:
 	fileUpdaterIP=127.0.0.1
 
 	mysqlSelectsFile=data/MySQL/MySqlSelects.txt
 	mysqlPathToIdFile=data/MySQL/MySqlPathToId.txt
-	mysqlPathIdWithRowIdsFile=data/MySQL/MySqlPathIdWithRowIds.txt
+	mysqlPathIdWithIdsFile=data/MySQL/MySqlPathIdWithRowIds.txt
 	mysqlPathsSizeFile=data/MySQL/MySqlPathsSize.txt
 
 	sqliteSelectsFile=data/SQLite/SQLiteSelects.txt
 	sqlitePathToIdFile=data/SQLite/SQLitePathToId.txt
-	sqlitePathIdWithRowIdsFile=data/SQLite/SQLitePathIdWithRowIds.txt
+	sqlitePathIdWithIdsFile=data/SQLite/SQLitePathIdWithRowIds.txt
 	sqlitePathsSizeFile=data/SQLite/SQLitePathsSize.txt
 
 	tsqlSelectsFile=data/TSQL/TSqlSelects.txt
 	tsqlPathToIdFile=data/TSQL/TSqlPathToId.txt
-	tsqlPathIdWithRowIdsFile=data/TSQL/TSqlPathIdWithRowIds.txt
+	tsqlPathIdWithIdsFile=data/TSQL/TSqlPathIdWithRowIds.txt
 	tsqlPathsSizeFile=data/TSQL/TSqlPathsSize.txt
 
 	plsqlSelectsFile=data/PLSQL/PlSqlSelects.txt
 	plsqlPathToIdFile=data/PLSQL/PlSqlPathToId.txt
-	plsqlPathIdWithRowIdsFile=data/PLSQL/PlSqlPathIdWithRowIds.txt
+	plsqlPathIdWithIdsFile=data/PLSQL/PlSqlPathIdWithRowIds.txt
 	plsqlPathsSizeFile=data/PLSQL/PlSqlPathsSize.txt
 
 	functionsForSimilarity=JOIN, GROUP BY, ORDER BY, MAX, MIN, SUM, COUNT, ASC, AVG, DESC, AND, OR, =, <=, >=, !=, >, <, <>, NULL, IN, \

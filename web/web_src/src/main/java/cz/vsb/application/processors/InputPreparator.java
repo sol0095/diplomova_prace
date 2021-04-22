@@ -33,7 +33,7 @@ public class InputPreparator {
     }
 
     public GrammarState prepareInput(String query, char grammar, String queryStmt){
-       // long start= System.currentTimeMillis();
+        //long start= System.currentTimeMillis();
 
 
         ParseTree parseTree = null;
@@ -52,6 +52,7 @@ public class InputPreparator {
             parser = new MySqlParser(new CommonTokenStream(lexer));
             removeErrorListeners(lexer, parser);
             parseTree = ((MySqlParser)parser).root();
+            //System.out.println(parseTree.toStringTree(parser));
         }
         else if(grammar == '1'){
             SQLiteLexer lexer = new SQLiteLexer(fromString(query));
@@ -74,13 +75,13 @@ public class InputPreparator {
 
         if(parseTree != null && parser.getNumberOfSyntaxErrors() == 0){
             //long finish= System.currentTimeMillis();
-           // System.out.println("Grammar time: " + (finish-start) + "ms");
+            //System.out.println("Grammar time: " + (finish-start) + "ms");
 
-           // start = System.currentTimeMillis();
+            //start = System.currentTimeMillis();
             ResultPreparator resultPreparator = new ResultPreparator();
             resultPreparator.prepareData(query, parseTree, parser);
-          //  finish = System.currentTimeMillis();
-          //  System.out.println("Converting tree to string xml time: " + (finish-start) + "ms");
+            //finish = System.currentTimeMillis();
+            //System.out.println("Converting tree to string xml time: " + (finish-start) + "ms");
 
             prepareInputPaths(resultPreparator.getXmlData(), queryStmt);
             return GrammarState.CORRECT;
@@ -109,15 +110,15 @@ public class InputPreparator {
     }
 
     private void prepareInputPaths(String xmlTree, String queryStmt){
-       // long start = System.currentTimeMillis();
-      //  long start2 = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
+        //long start2 = System.currentTimeMillis();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         try {
             ArrayList<String> inputPaths = new ArrayList<>();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document document = dBuilder.parse(new InputSource(new StringReader(xmlTree)));
-          //  long finish2 = System.currentTimeMillis();
-          //  long convertTime = finish2 - start2;
+            //long finish2 = System.currentTimeMillis();
+            //long convertTime = finish2 - start2;
 
 
             XmlTreeView.getLeafPaths((Element)(document.getElementsByTagName(queryStmt).item(0)), new StringBuilder(), inputPaths);
@@ -134,8 +135,8 @@ public class InputPreparator {
             getPathsIDs(inputHashStr);
             //long finish = System.currentTimeMillis();
 
-          //  System.out.println("Converting string to xml: " + convertTime + "ms");
-           // System.out.println("Getting paths from input query: " + (finish-start-convertTime) + "ms");
+            //System.out.println("Converting string to xml: " + convertTime + "ms");
+            //System.out.println("Getting paths from input query: " + (finish-start-convertTime) + "ms");
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {

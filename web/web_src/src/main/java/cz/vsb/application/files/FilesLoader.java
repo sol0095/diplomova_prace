@@ -24,19 +24,19 @@ public class FilesLoader {
 
     private static void setInstances(){
         mysql = new GrammarFiles(PropertyLoader.loadProperty("mysqlPathToIdFile"),
-                PropertyLoader.loadProperty("mysqlPathIdWithRowIdsFile"),
+                PropertyLoader.loadProperty("mysqlPathIdWithIdsFile"),
                 PropertyLoader.loadProperty("mysqlSelectsFile"),
                 PropertyLoader.loadProperty("mysqlPathsSizeFile"));
         tsql = new GrammarFiles(PropertyLoader.loadProperty("tsqlPathToIdFile"),
-                PropertyLoader.loadProperty("tsqlPathIdWithRowIdsFile"),
+                PropertyLoader.loadProperty("tsqlPathIdWithIdsFile"),
                 PropertyLoader.loadProperty("tsqlSelectsFile"),
                 PropertyLoader.loadProperty("tsqlPathsSizeFile"));
         sqlite = new GrammarFiles(PropertyLoader.loadProperty("sqlitePathToIdFile"),
-                PropertyLoader.loadProperty("sqlitePathIdWithRowIdsFile"),
+                PropertyLoader.loadProperty("sqlitePathIdWithIdsFile"),
                 PropertyLoader.loadProperty("sqliteSelectsFile"),
                 PropertyLoader.loadProperty("sqlitePathsSizeFile"));
         plsql = new GrammarFiles(PropertyLoader.loadProperty("plsqlPathToIdFile"),
-                PropertyLoader.loadProperty("plsqlPathIdWithRowIdsFile"),
+                PropertyLoader.loadProperty("plsqlPathIdWithIdsFile"),
                 PropertyLoader.loadProperty("plsqlSelectsFile"),
                 PropertyLoader.loadProperty("plsqlPathsSizeFile"));
     }

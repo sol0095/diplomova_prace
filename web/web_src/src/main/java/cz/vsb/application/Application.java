@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class Application{
 
     public static SelectWithSimilarity[] calculateSimilarity(char grammar, String queryStmt, String query){
-
+        //long wholeCalculating = System.currentTimeMillis();
         Semaphore semaphore = GrammarLock.getSemaphore();
         SelectWithSimilarity[] sortedResult = null;
 
@@ -33,13 +33,25 @@ public class Application{
                         new SelectWithSimilarity("Wrong query syntax.", 0.0, -1);
                 return empty;
             }
-
+            //long start = System.currentTimeMillis();
             ArrayList<Cursor> cursors = createCursors(inputPreparator, grammarFiles);
-            ArrayList<SelectWithSimilarity> resultList = iterateCursors(cursors, grammarFiles);
+            //long finish = System.currentTimeMillis();
+            //System.out.println("Create cursors time: " + (finish-start) + "ms");
 
+            //long start2 = System.currentTimeMillis();
+            ArrayList<SelectWithSimilarity> resultList = iterateCursors(cursors, grammarFiles);
+            //long finish2 = System.currentTimeMillis();
+            //System.out.println("Iterate and calculate similarity time: " + (finish2-start2) + "ms");
+
+            //long start3 = System.currentTimeMillis();
             Collections.sort(resultList, new SelectComparator());
+            //long finish3 = System.currentTimeMillis();
+            //System.out.println("Sorting time: " + (finish3-start3) + "ms");
 
             sortedResult = getTop20(resultList, grammar);
+
+            //long finishWholeCalculating = System.currentTimeMillis();
+            //System.out.println("Whole calculating time: " + (finishWholeCalculating-wholeCalculating) + "ms");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally {
@@ -103,7 +115,7 @@ public class Application{
     }
 
     private static SelectWithSimilarity[] getTop20(ArrayList<SelectWithSimilarity> resultList, char grammar){
-      //  long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
 
         SelectWithSimilarity[] top20 = new SelectWithSimilarity[20];
 
@@ -112,8 +124,8 @@ public class Application{
             top20[i].formatQuery(grammar);
         }
 
-       // long finish = System.currentTimeMillis();
-       // System.out.println("Formatting time: " + (finish-start) + "ms");
+        //long finish = System.currentTimeMillis();
+        //System.out.println("Formatting time: " + (finish-start) + "ms");
 
         return top20;
     }
