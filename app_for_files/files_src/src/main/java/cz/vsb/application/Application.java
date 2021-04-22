@@ -14,19 +14,19 @@ public class Application{
         long start = System.currentTimeMillis();
 
         GrammarFiles mysql = new GrammarFiles(PropertyLoader.loadProperty("mysqlPathToIdFile"),
-                PropertyLoader.loadProperty("mysqlPathIdWithRowIdsFile"),
+                PropertyLoader.loadProperty("mysqlPathIdWithIdsFile"),
                 PropertyLoader.loadProperty("mysqlSelectsFile"),
                 PropertyLoader.loadProperty("mysqlPathsSizeFile"), PropertyLoader.loadProperty("mysqlXmlFile"), "root");
         GrammarFiles sqlite = new GrammarFiles(PropertyLoader.loadProperty("sqlitePathToIdFile"),
-                PropertyLoader.loadProperty("sqlitePathIdWithRowIdsFile"),
+                PropertyLoader.loadProperty("sqlitePathIdWithIdsFile"),
                 PropertyLoader.loadProperty("sqliteSelectsFile"),
                 PropertyLoader.loadProperty("sqlitePathsSizeFile"), PropertyLoader.loadProperty("sqliteXmlFile"), "parse");
         GrammarFiles tsql = new GrammarFiles(PropertyLoader.loadProperty("tsqlPathToIdFile"),
-                PropertyLoader.loadProperty("tsqlPathIdWithRowIdsFile"),
+                PropertyLoader.loadProperty("tsqlPathIdWithIdsFile"),
                 PropertyLoader.loadProperty("tsqlSelectsFile"),
                 PropertyLoader.loadProperty("tsqlPathsSizeFile"), PropertyLoader.loadProperty("tsqlXmlFile"), "tsql_file");
         GrammarFiles plsql = new GrammarFiles(PropertyLoader.loadProperty("plsqlPathToIdFile"),
-                PropertyLoader.loadProperty("plsqlPathIdWithRowIdsFile"),
+                PropertyLoader.loadProperty("plsqlPathIdWithIdsFile"),
                 PropertyLoader.loadProperty("plsqlSelectsFile"),
                 PropertyLoader.loadProperty("plsqlPathsSizeFile"), PropertyLoader.loadProperty("plsqlXmlFile"), "sql_script");
 

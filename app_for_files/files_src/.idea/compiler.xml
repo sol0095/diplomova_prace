@@ -7,12 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="aplikace_na_soubory" />
+        <module name="files_src" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="aplikace_na_soubory" options="-parameters" />
+      <module name="files_src" options="-parameters" />
     </option>
   </component>
 </project>

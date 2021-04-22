@@ -1,41 +1,42 @@
-Nápověda pro nástroj na generování souborů
+Nápověda pro generátor souborů
 ##############################################################
-V souboru file.properties lze nalézt například tyto konfigurace pro MySQL a konfiguraci pro definici funkcí:
-	mysqlXmlFile= vstupní XML soubor pro gramatiku (v tomto případě MySQL), který vznikl jako výstup ze semestrálního projektu (Analýza SQL příkazů ze StackOverflow viz. https://github.com/sol0095/semestralni_projekt)
+V souboru file.properties lze nalézt například tyto konfigurace pro MySQL:
+	mysqlXmlFile= nastavení cesty vstupního XML souboru pro gramatiku (v tomto případě MySQL), který vznikl jako výstup ze semestrálního projektu (Analýza SQL příkazů ze StackOverflow, viz složka analyzátor_sql)
 	mysqlselectsFile= nastavení cesty výstupního souboru pro MySQL.
 	mysqlpathToIdFile= nastavení cesty výstupního souborupro MySQL.
-	mysqlpathIdWithRowIds= nastavení cesty výstupního souboru pro MySQL.
+	mysqlpathIdWithIds= nastavení cesty výstupního souboru pro MySQL.
 	mysqlpathsSize= nastavení cesty výstupního souboru pro MySQL.
-
-	functionsForSimilarity= nastavení funkcí pro SQL. Každá funkce musí být oddělená čárkou a mezerou (tzn. ", "). Slouží pro lepší výstup podobností SQL dotazů s danými funkcemi (záleží na situaci, někdy je to neúčinné). K této konfiguraci byl přidán základní výčet funkcí viz příklad níže.
+	functionsForSimilarity= nastavení funkcí pro SQL. Každá funkce musí být oddělená čárkou a mezerou (tzn. ", "). 
+		Slouží pro lepší výstup podobností SQL dotazů s danými funkcemi (záleží na situaci, někdy je to neúčinné). 
+		K této konfiguraci byl přidán základní výčet funkcí viz příklad níže.
 
 ##############################################################
-Pro správné fungování je nutné všechny konfigurace (cesty) nastavit pro každou gramatiku.
+Pro správné fungování je nutné všechny konfigurace (a cesty) nastavit pro každou gramatiku.
 Pozor na lomítka v absolutních cestách. Pokud se zadá absolutní cesta s opačným lomítkem, vyvolá se výjimka.
 
 Příklad:
 	mysqlXmlFile=data/MySQL.xml
 	mysqlSelectsFile=data/MySqlSelects.txt
 	mysqlPathToIdFile=data/MySqlPathToId.txt
-	mysqlPathIdWithRowIdsFile=data/MySqlPathIdWithRowIds.txt
+	mysqlPathIdWithIdsFile=data/MySqlPathIdWithIds.txt
 	mysqlPathsSizeFile=data/MySqlPathsSize.txt
 
 	sqliteXmlFile=data/SQLite.xml
 	sqliteSelectsFile=data/SQLiteSelects.txt
 	sqlitePathToIdFile=data/SQLitePathToId.txt
-	sqlitePathIdWithRowIdsFile=data/SQLitePathIdWithRowIds.txt
+	sqlitePathIdWithIdsFile=data/SQLitePathIdWithIds.txt
 	sqlitePathsSizeFile=data/SQLitePathsSize.txt
 
 	tsqlXmlFile=data/TSQL.xml
 	tsqlSelectsFile=data/TSqlSelects.txt
 	tsqlPathToIdFile=data/TSqlPathToId.txt
-	tsqlPathIdWithRowIdsFile=data/TSqlPathIdWithRowIds.txt
+	tsqlPathIdWithIdsFile=data/TSqlPathIdWithIds.txt
 	tsqlPathsSizeFile=data/TSqlPathsSize.txt
 
 	plsqlXmlFile=data/PlSql.xml
 	plsqlSelectsFile=data/PlSqlSelects.txt
 	plsqlPathToIdFile=data/PlSqlPathToId.txt
-	plsqlPathIdWithRowIdsFile=data/PlSqlPathIdWithRowIds.txt
+	plsqlPathIdWithIdsFile=data/PlSqlPathIdWithIds.txt
 	plsqlPathsSizeFile=data/PlSqlPathsSize.txt
 
 	functionsForSimilarity=JOIN, GROUP BY, ORDER BY, MAX, MIN, SUM, COUNT, ASC, AVG, DESC, AND, OR, =, <=, >=, !=, >, <, <>, NULL, IN, \
