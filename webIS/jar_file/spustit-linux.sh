@@ -1,0 +1,1 @@
+java -Xms8G -Xmx8G -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+AlwaysPreTouch -XX:G1HeapRegionSize=8M -XX:InitiatingHeapOccupancyPercent=15 -XX:+PerfDisableSharedMem -jar DP.jar nogui
